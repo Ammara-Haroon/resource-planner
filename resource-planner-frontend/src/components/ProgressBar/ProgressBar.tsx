@@ -14,7 +14,7 @@ const ProgressBar = ({ startDate, endDate }: IProgressBarProps) => {
     100
   );
 
-  console.log(progress);
+  //console.log(progress);
   return (
     <div className="hover:bg-slate-500">
       <div className="flex justify-between">

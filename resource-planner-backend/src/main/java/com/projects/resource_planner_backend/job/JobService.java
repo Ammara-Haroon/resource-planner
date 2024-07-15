@@ -40,8 +40,17 @@ public class JobService {
     return this.repo.findAll();
   }
 
-  public Job createJob(@Valid CreateJobDTO data) {
+  public Job createJob(@Valid CreateJobDTO data) throws ServiceValidationException {
+    Long resId = data.getResource();
+    Optional<Resource> mayBeResource = this.resourceService.findResourceById(resId);
+    if(mayBeResource.isEmpty()){
+      ValidationErrors errors = new ValidationErrors();
+      errors.addError("resourceId", "resourceId does not match any existing resource");
+        throw new ServiceValidationException(errors);
+      }
+    
     Job newJob = mapper.map(data,Job.class);
+    newJob.setResource(mayBeResource.get());
     return this.repo.save(newJob);
   }
 

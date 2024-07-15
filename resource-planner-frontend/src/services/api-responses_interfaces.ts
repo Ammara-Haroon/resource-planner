@@ -3,7 +3,7 @@ export interface Job {
   startDate: Date;
   endDate: Date;
   name: string;
-  resource: Resource | null;
+  resource: Resource | null | number;
 }
 
 export interface Resource {

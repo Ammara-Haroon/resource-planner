@@ -6,7 +6,7 @@ import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import Modal from "../Modal/Modal";
 import ProgressBar from "../ProgressBar/ProgressBar";
 import OptionsMenu from "../OptionsMenu/OptionsMenu";
-
+import Profile_Pic from "../../assets/profile_placeholder.jpg";
 interface IJobsCardProps {
   job: Job;
   onDelete: (id: number) => any;
@@ -42,18 +42,25 @@ const JobsCard = ({ job, onDelete, onEdit }: IJobsCardProps) => {
         />
       )}
       <div
-        className="p-2 border border-gray-100 grid grid-cols-4 gap-8 hover:bg-slate-500"
+        className="p-2 border border-gray-100 grid grid-cols-4 gap-8 hover:bg-slate-300"
         style={{ gridTemplateColumns: "1fr 1fr 1fr 45px" }}
       >
-        <div className="hover:bg-slate-500 after:hover:bg-slate-500">
+        <div>
           <h4 className="text-lg font-semibold">{job.name}</h4>
         </div>
         <ProgressBar startDate={job.startDate} endDate={job.endDate} />
         <div>
           {job.resource ? (
-            <p>{`${job.resource?.firstName} ${job.resource?.lastName}`}</p>
+            <div className="flex gap-1 items-center">
+              <img
+                className="h-10 w-10 border rounded-full"
+                src={job.resource.imageUrl || Profile_Pic}
+                alt={`${job.resource?.firstName}`}
+              />
+              <p>{`${job.resource?.firstName} ${job.resource?.lastName}`}</p>
+            </div>
           ) : (
-            <p className="text-red-700">not assigned</p>
+            <p className="text-red-700 italic">not assigned</p>
           )}
         </div>
         <div className="flex  hover:cursor-pointer justify-center items-center w-fit relative">

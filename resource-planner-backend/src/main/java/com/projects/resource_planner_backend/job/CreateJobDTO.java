@@ -15,11 +15,11 @@ public class CreateJobDTO {
   
   private Date endDate;
   
-  private Long resourceId;
+  private Long resource;
 
   
-  public Long getResourceId() {
-    return resourceId;
+  public Long getResource() {
+    return resource;
   }
 
   public String getName() {

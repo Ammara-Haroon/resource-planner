@@ -39,8 +39,13 @@ public class JobController {
   }
 
   @PostMapping()
-  public ResponseEntity<Job> createJob(@Valid @RequestBody CreateJobDTO data) {
-      Job newJob = this.jobService.createJob(data);
+  public ResponseEntity<Job> createJob(@Valid @RequestBody CreateJobDTO data) throws BadRequestException {
+      Job newJob;
+      try {
+        newJob = this.jobService.createJob(data);
+      } catch (ServiceValidationException e) {
+        throw new BadRequestException(e.getMessage());
+      }
       return new ResponseEntity<>(newJob,HttpStatus.CREATED);
   }
 

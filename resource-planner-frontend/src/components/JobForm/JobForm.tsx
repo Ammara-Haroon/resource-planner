@@ -6,8 +6,7 @@ import {
   getAvailableResources,
 } from "../../services/resource-sevices";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCar, faPlus } from "@fortawesome/free-solid-svg-icons";
-import { addJob, createJob } from "../../services/job-services";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 const JobForm = ({ onSubmit }: { onSubmit: (newJob: Partial<Job>) => any }) => {
   const [resourceVal, setResourceVal] = useState("not assigned");
@@ -63,6 +62,11 @@ const JobForm = ({ onSubmit }: { onSubmit: (newJob: Partial<Job>) => any }) => {
     const newJob: Partial<Job> = formData;
     newJob.startDate = value?.startDate;
     newJob.endDate = value?.endDate;
+    if (formData.resource == -1) {
+      newJob.resource = null;
+    } else {
+      newJob.resource = parseInt(formData.resource);
+    }
     console.log(newJob);
     onSubmit(newJob);
   };
@@ -80,7 +84,8 @@ const JobForm = ({ onSubmit }: { onSubmit: (newJob: Partial<Job>) => any }) => {
         <div>
           <Datepicker value={value} onChange={handleValueChange} />
         </div>
-        <select name="resource">
+        <select name="resource" defaultValue={-1}>
+          <option value={-1}>Not Assigned</option>
           {options.map((op: Resource) => (
             <option key={op.id} value={op.id}>
               {op.firstName} {op.lastName}

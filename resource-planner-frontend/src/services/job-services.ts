@@ -5,12 +5,14 @@ import { Job } from "./api-responses_interfaces";
 export const getAllJobs = async (): Promise<Job[]> => {
   const response = await axios.get(`${BACKEND_BASE_URL}/jobs`);
   const data = response.data;
+  console.log(data);
   return cleanJobs(data);
 };
 
 export const createJob = async (data: Partial<Job>): Promise<Job> => {
+  console.log(data);
+
   const response = await axios.post(`${BACKEND_BASE_URL}/jobs`, (data = data));
-  console.log(response.data);
   return response.data;
 };
 

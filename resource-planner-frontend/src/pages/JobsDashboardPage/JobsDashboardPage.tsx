@@ -1,23 +1,11 @@
-import React, { useEffect } from "react";
 import {
-  addJobs,
   createJob,
   deleteJob,
   getAllJobs,
   updateJob,
 } from "../../services/job-services";
-import {
-  addResources,
-  getAvailableResources,
-} from "../../services/resource-sevices";
-import {
-  Mutation,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import JobsCard from "../../components/JobsCard/JobsCard";
-import TaskForm from "../../components/TaskForm/TaskForm";
 import JobForm from "../../components/JobForm/JobForm";
 import { Job } from "../../services/api-responses_interfaces";
 
@@ -50,11 +38,12 @@ const JobsDashboardPage = () => {
   if (jobsQuery.isError) return <h1>Error loading data!!!</h1>;
 
   const handleDelete = (id: number): void => {
-    console.log("deletetetetet");
+    //console.log("deletetetetet");
     deleteMutation.mutate(id);
   };
 
   const handleAdd = (newJob: Partial<Job>): void => {
+    console.log(newJob);
     addMutation.mutate(newJob);
   };
 
