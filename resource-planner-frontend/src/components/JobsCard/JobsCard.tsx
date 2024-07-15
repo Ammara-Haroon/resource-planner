@@ -2,67 +2,74 @@ import React, { useState } from "react";
 import { Job } from "../../services/api-responses_interfaces";
 import { getAvailableResources } from "../../services/resource-sevices";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMinus } from "@fortawesome/free-solid-svg-icons";
+import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
 import Modal from "../Modal/Modal";
+import ProgressBar from "../ProgressBar/ProgressBar";
+import OptionsMenu from "../OptionsMenu/OptionsMenu";
 
-const JobsCard = ({ job }: { job: Job }) => {
-  console.log(job);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const progress =
-    Math.max(
-      (new Date().getTime() - job.startDate.getTime()) /
-        (job.endDate.getTime() - job.startDate.getTime()),
-      0
-    ) * 100;
-  console.log(progress);
-  console.log(isModalVisible);
+interface IJobsCardProps {
+  job: Job;
+  onDelete: (id: number) => any;
+  onEdit: (job: Job) => any;
+}
+const JobsCard = ({ job, onDelete, onEdit }: IJobsCardProps) => {
+  //console.log(job);
+  const [showModal, setShowModal] = useState(false);
+  const [showOptionsMenu, setShowOptionsMenu] = useState(false);
 
   getAvailableResources(job.startDate, job.endDate);
-  const handleClick = (): void => {
-    setIsModalVisible(true);
+  const handleEdit = (): void => {
+    setShowOptionsMenu(false);
+    setShowModal(true);
   };
-
+  const handleClick = (): void => {
+    setShowOptionsMenu(true);
+  };
+  const handleClose = (): void => {
+    setShowOptionsMenu(false);
+  };
+  const handleDelete = (): void => {
+    setShowOptionsMenu(false);
+    onDelete(job.id);
+  };
   return (
     <>
-      {isModalVisible && (
-        <Modal job={job} onClose={() => setIsModalVisible(false)} />
+      {showModal && (
+        <Modal
+          job={job}
+          onClose={() => setShowModal(false)}
+          onSubmit={onEdit}
+        />
       )}
       <div
-        className="p-2 grid grid-cols-4 divide-y-2 gap-2 hover:bg-slate-500  hover:cursor-pointer"
-        onClick={handleClick}
+        className="p-2 border border-gray-100 grid grid-cols-4 gap-8 hover:bg-slate-500"
+        style={{ gridTemplateColumns: "1fr 1fr 1fr 45px" }}
       >
         <div className="hover:bg-slate-500 after:hover:bg-slate-500">
           <h4 className="text-lg font-semibold">{job.name}</h4>
         </div>
-
-        <div className="hover:bg-slate-500">
-          <div className="flex justify-between">
-            <span>
-              {job.startDate.getDate()}/{job.startDate.getMonth() + 1}
-            </span>
-            <span>
-              {job.endDate.getDate()}/{job.endDate.getMonth() + 1}
-            </span>
-          </div>
-          <div className="border-4 rounded-xl border-slate-700 w-full h-5 bg-gray-400">
-            {progress !== 0 && (
-              <div
-                className="border-4 rounded-xl border-transparent w-full h-full bg-green-900"
-                style={{ width: `${progress}%` }}
-              ></div>
-            )}
-          </div>
-        </div>
-        <div className="text-red-700">
+        <ProgressBar startDate={job.startDate} endDate={job.endDate} />
+        <div>
           {job.resource ? (
-            `${job.resource?.firstName} ${job.resource?.lastName}`
+            <p>{`${job.resource?.firstName} ${job.resource?.lastName}`}</p>
           ) : (
-            <select>
-              <option>not assigned</option>
-            </select>
+            <p className="text-red-700">not assigned</p>
           )}
         </div>
-        <FontAwesomeIcon icon={faMinus} />
+        <div className="flex  hover:cursor-pointer justify-center items-center w-fit relative">
+          <FontAwesomeIcon
+            onClick={handleClick}
+            className="px-5 text-xl"
+            icon={faEllipsisV}
+          />
+          {showOptionsMenu && (
+            <OptionsMenu
+              onDelete={handleDelete}
+              onEdit={handleEdit}
+              onClose={handleClose}
+            />
+          )}
+        </div>
       </div>
     </>
   );

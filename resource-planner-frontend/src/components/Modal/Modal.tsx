@@ -6,7 +6,12 @@ import { getAvailableResources } from "../../services/resource-sevices";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCross, faTimes } from "@fortawesome/free-solid-svg-icons";
 
-const Modal = ({ job, onClose }: { job: Job; onClose: () => void }) => {
+interface IModalProps {
+  job: Job;
+  onClose: () => any;
+  onSubmit: (data: Job) => any;
+}
+const Modal = ({ job, onClose, onSubmit }: IModalProps) => {
   const [options, setOptions] = useState<Resource[]>([]);
   document.body.style.overflow = "hidden";
   useEffect(() => {
@@ -31,13 +36,30 @@ const Modal = ({ job, onClose }: { job: Job; onClose: () => void }) => {
     );
   };
 
+  const handlSubmit = (event: any): void => {
+    event.preventDefault();
+    const formData =
+      Object.fromEntries(new FormData(formRef.current).entries()) || null;
+    console.log(formData);
+    const editedJob: Job = { ...job, ...formData };
+    editedJob.startDate = value?.startDate;
+    editedJob.endDate = value?.endDate;
+
+    console.log(editedJob);
+    onSubmit(editedJob);
+  };
+
   return (
     <div className="flex justify-center items-center fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity">
-      <div className="w-11/12 h-2/3 bg-slate-50">
-        <form className="flex justify-center" ref={formRef}>
-          <div>
+      <div className="w-11/12 h-2/3 bg-slate-50 flex justify-center items-center">
+        <form
+          onSubmit={handlSubmit}
+          className="flex justify-center items-center"
+          ref={formRef}
+        >
+          <div className="relative flex flex-col gap-5 justify-center items-center">
             <input
-              className="text-lg font-semibold"
+              className="text-lg font-semibold text-center"
               defaultValue={job.name}
               name="name"
               required
@@ -45,31 +67,23 @@ const Modal = ({ job, onClose }: { job: Job; onClose: () => void }) => {
             <div>
               <Datepicker value={value} onChange={handleValueChange} />
             </div>
-            <div className="text-red-700">
-              {/* <input
-            value={resourceVal}
-            type="text"
-            list="data"
-            name="resource"
-            onChange={handleChange}
-          /> */}
-              <select name="resource" defaultValue={job.resource?.id}>
-                {options.map((op: Resource) => (
-                  <option key={op.id} value={op.id}>
-                    {op.firstName} {op.lastName}
-                  </option>
-                ))}
-              </select>
-              <button type="submit">
-                <FontAwesomeIcon
-                  onClick={() => {
-                    document.body.style.overflow = "visible";
-                    onClose();
-                  }}
-                  icon={faTimes}
-                />
-              </button>
-            </div>
+            <select name="resource" defaultValue={job.resource?.id}>
+              {options.map((op: Resource) => (
+                <option key={op.id} value={op.id}>
+                  {op.firstName} {op.lastName}
+                </option>
+              ))}
+            </select>
+            <button type="submit">Save</button>
+            <p className="absolute top-0 right-0">
+              <FontAwesomeIcon
+                onClick={() => {
+                  document.body.style.overflow = "visible";
+                  onClose();
+                }}
+                icon={faTimes}
+              />
+            </p>
           </div>
         </form>
       </div>

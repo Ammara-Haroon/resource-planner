@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCar, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { addJob, createJob } from "../../services/job-services";
 
-const JobForm = () => {
+const JobForm = ({ onSubmit }: { onSubmit: (newJob: Partial<Job>) => any }) => {
   const [resourceVal, setResourceVal] = useState("not assigned");
   const [value, setValue] = useState<DateValueType>({
     startDate: new Date(),
@@ -54,43 +54,42 @@ const JobForm = () => {
   };
   const formRef = useRef<HTMLFormElement | null>(null);
 
-  const handleClick = (event: any): void => {
+  const handleSubmit = (event: any): void => {
     event.preventDefault();
     const formData =
-      Object.fromEntries(new FormData(formRef.current).entries()) || null;
+      Object.fromEntries(
+        new FormData(formRef.current || undefined).entries()
+      ) || null;
     const newJob: Partial<Job> = formData;
     newJob.startDate = value?.startDate;
     newJob.endDate = value?.endDate;
-    console.log(value.startDate, value.endDate);
     console.log(newJob);
-    createJob(formData);
+    onSubmit(newJob);
   };
   return (
-    <form ref={formRef}>
-      <div className="grid grid-cols-4 divide-y-2 gap-2 w-full">
+    <form
+      className="bg-slate-400 w-full fixed bottom-0 border border-black z-50"
+      ref={formRef}
+      onSubmit={handleSubmit}
+    >
+      <div
+        className="p-2 border border-gray-100 grid grid-cols-4 gap-8 hover:bg-slate-500"
+        style={{ gridTemplateColumns: "1fr 1fr 1fr 10px" }}
+      >
         <input className="text-lg font-semibold" name="name" required></input>
         <div>
           <Datepicker value={value} onChange={handleValueChange} />
         </div>
-        <div className="text-red-700">
-          {/* <input
-            value={resourceVal}
-            type="text"
-            list="data"
-            name="resource"
-            onChange={handleChange}
-          /> */}
-          <select name="resource">
-            {options.map((op: Resource) => (
-              <option key={op.id} value={op.id}>
-                {op.firstName} {op.lastName}
-              </option>
-            ))}
-          </select>
-          <button type="submit">
-            <FontAwesomeIcon onClick={handleClick} icon={faPlus} />
-          </button>
-        </div>
+        <select name="resource">
+          {options.map((op: Resource) => (
+            <option key={op.id} value={op.id}>
+              {op.firstName} {op.lastName}
+            </option>
+          ))}
+        </select>
+        <button type="submit">
+          <FontAwesomeIcon icon={faPlus} />
+        </button>
       </div>
     </form>
   );

@@ -10,7 +10,16 @@ export const getAllJobs = async (): Promise<Job[]> => {
 
 export const createJob = async (data: Partial<Job>): Promise<Job> => {
   const response = await axios.post(`${BACKEND_BASE_URL}/jobs`, (data = data));
+  console.log(response.data);
   return response.data;
+};
+
+export const deleteJob = async (id: number): Promise<void> => {
+  const response = await axios.delete(`${BACKEND_BASE_URL}/jobs/${id}`);
+};
+export const updateJob = async (job: Job): Promise<void> => {
+  console.log(`${BACKEND_BASE_URL}/jobs/${job.id}`, job);
+  const response = await axios.put(`${BACKEND_BASE_URL}/jobs/${job.id}`, job);
 };
 
 export const addJobs = () => {

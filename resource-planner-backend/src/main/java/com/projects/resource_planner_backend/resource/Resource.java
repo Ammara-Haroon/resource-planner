@@ -3,6 +3,7 @@ package com.projects.resource_planner_backend.resource;
 import java.sql.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.projects.resource_planner_backend.job.Job;
 
 import jakarta.persistence.Column;
@@ -52,6 +53,7 @@ public class Resource {
   }
 
   @OneToMany(mappedBy = "resource")
+  @JsonIgnore()
   List<Job> jobs;
 
   public Long getId() {

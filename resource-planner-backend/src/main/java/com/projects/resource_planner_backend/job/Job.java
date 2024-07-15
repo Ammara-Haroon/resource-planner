@@ -32,6 +32,12 @@ public class Job {
   @Temporal(TemporalType.DATE)
   private Date endDate;
   
+  @Override
+  public String toString() {
+    return "Job [id=" + id + ", name=" + name + ", startDate=" + startDate + ", endDate=" + endDate + ", resource="
+        + resource + "]";
+  }
+
   @ManyToOne(optional = true)
   @JoinColumn(name="resource_id",nullable = true)
   private Resource resource; 
