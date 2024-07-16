@@ -3,13 +3,13 @@ export interface Job {
   startDate: Date;
   endDate: Date;
   name: string;
-  resource: Resource | null | number;
+  resource: Partial<Resource> | null | number;
 }
 
 export interface Resource {
   id: number;
   firstName: string;
   lastName: string;
-  imageUrl: string;
-  jobs: Job[];
+  imageUrl: string | null;
+  jobs: Partial<Job>[] | null;
 }

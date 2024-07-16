@@ -4,8 +4,10 @@ import java.sql.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.projects.resource_planner_backend.job.Job;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -52,8 +54,8 @@ public class Resource {
     this.jobs = jobs;
   }
 
-  @OneToMany(mappedBy = "resource")
-  @JsonIgnore()
+  @OneToMany(mappedBy = "resource",cascade=CascadeType.DETACH)
+  @JsonIgnoreProperties("resource")
   List<Job> jobs;
 
   public Long getId() {

@@ -1,13 +1,21 @@
 import axios from "axios";
 import { BACKEND_BASE_URL } from "./api-config";
 import { Resource } from "./api-responses_interfaces";
+import { cleanJobs } from "./job-services";
 
 export const getAllResources = async (): Promise<Resource[]> => {
   const response = await axios.get(`${BACKEND_BASE_URL}/resources`);
-  return response.data;
+
+  let data = response.data;
+  data = data.map((entry: Resource) => ({
+    ...entry,
+    jobs: cleanJobs(entry.jobs),
+  }));
+  console.log(data);
+  return data;
 };
 
-export const addResource = async (
+export const createResource = async (
   data: Partial<Resource>
 ): Promise<Resource> => {
   const response = await axios.post(
@@ -15,6 +23,17 @@ export const addResource = async (
     (data = data)
   );
   return response.data;
+};
+
+export const deleteResource = async (id: number): Promise<void> => {
+  const response = await axios.delete(`${BACKEND_BASE_URL}/resources/${id}`);
+};
+export const updateResource = async (resource: Resource): Promise<void> => {
+  console.log(`${BACKEND_BASE_URL}/resources/${resource.id}`, resource);
+  const response = await axios.put(
+    `${BACKEND_BASE_URL}/resources/${resource.id}`,
+    resource
+  );
 };
 
 export const addResources = async () => {
@@ -28,7 +47,7 @@ export const addResources = async () => {
       imageUrl: data.picture.thumbnail,
     };
     // console.log(newResource);
-    addResource(newResource);
+    createResource(newResource);
   }
 };
 

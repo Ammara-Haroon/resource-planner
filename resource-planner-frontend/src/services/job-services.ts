@@ -46,7 +46,7 @@ export const addJobs = () => {
   }
 };
 
-const cleanJobs = (data: any): Job[] => {
+export const cleanJobs = (data: any): Job[] => {
   return data.map((entry: any) => ({
     ...entry,
     startDate: new Date(entry.startDate),

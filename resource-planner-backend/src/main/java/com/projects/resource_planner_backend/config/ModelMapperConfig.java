@@ -9,6 +9,7 @@ import com.projects.resource_planner_backend.job.Job;
 import com.projects.resource_planner_backend.job.UpdateJobDTO;
 import com.projects.resource_planner_backend.resource.CreateResourceDTO;
 import com.projects.resource_planner_backend.resource.Resource;
+import com.projects.resource_planner_backend.resource.UpdateResourceDTO;
 
 @Configuration
 public class ModelMapperConfig {
@@ -18,6 +19,7 @@ public class ModelMapperConfig {
     mapper.typeMap(CreateJobDTO.class, Job.class);
     mapper.typeMap(CreateResourceDTO.class, Resource.class);
     mapper.typeMap(UpdateJobDTO.class, Job.class);
+    mapper.typeMap(UpdateResourceDTO.class, Resource.class);
     
     return mapper;
   }

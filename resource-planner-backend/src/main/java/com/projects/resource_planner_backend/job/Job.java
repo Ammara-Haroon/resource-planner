@@ -1,7 +1,9 @@
 package com.projects.resource_planner_backend.job;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.projects.resource_planner_backend.resource.Resource;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -38,8 +40,9 @@ public class Job {
         + resource + "]";
   }
 
-  @ManyToOne(optional = true)
+  @ManyToOne(optional = true,cascade=CascadeType.DETACH)
   @JoinColumn(name="resource_id",nullable = true)
+  @JsonIgnoreProperties("jobs")
   private Resource resource; 
 
   public Resource getResource() {

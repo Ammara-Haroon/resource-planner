@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Job } from "../../services/api-responses_interfaces";
+import { Job, Resource } from "../../services/api-responses_interfaces";
 import { getAvailableResources } from "../../services/resource-sevices";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
@@ -7,17 +7,21 @@ import Modal from "../Modal/Modal";
 import ProgressBar from "../ProgressBar/ProgressBar";
 import OptionsMenu from "../OptionsMenu/OptionsMenu";
 import Profile_Pic from "../../assets/profile_placeholder.jpg";
-interface IJobsCardProps {
-  job: Job;
+import WeekView from "../WeekView/WeekView";
+import ProfileModal from "../ProfileModal/ProfileModal";
+import { useNavigate } from "react-router-dom";
+interface IResourceCardProps {
+  resource: Resource;
   onDelete: (id: number) => any;
-  onEdit: (job: Job) => any;
+  onEdit: (resource: Resource) => any;
 }
-const JobsCard = ({ job, onDelete, onEdit }: IJobsCardProps) => {
+
+const ResourceCard = ({ resource, onDelete, onEdit }: IResourceCardProps) => {
   //console.log(job);
   const [showModal, setShowModal] = useState(false);
   const [showOptionsMenu, setShowOptionsMenu] = useState(false);
+  const navigate = useNavigate();
 
-  getAvailableResources(job.startDate, job.endDate);
   const handleEdit = (): void => {
     setShowOptionsMenu(false);
     setShowModal(true);
@@ -28,16 +32,26 @@ const JobsCard = ({ job, onDelete, onEdit }: IJobsCardProps) => {
   const handleClose = (): void => {
     setShowOptionsMenu(false);
   };
+  const handleCloseModal = (): void => {
+    setShowModal(false);
+  };
   const handleDelete = (): void => {
     setShowOptionsMenu(false);
-    onDelete(job.id);
+    onDelete(resource.id);
   };
+
+  const handleViewMore = () => {
+    navigate(`/resources/${resource.id}`, {
+      state: { resourceData: resource },
+    });
+  };
+
   return (
     <>
       {showModal && (
-        <Modal
-          job={job}
-          onClose={() => setShowModal(false)}
+        <ProfileModal
+          resource={resource}
+          onClose={handleCloseModal}
           onSubmit={onEdit}
         />
       )}
@@ -45,35 +59,29 @@ const JobsCard = ({ job, onDelete, onEdit }: IJobsCardProps) => {
         className="p-2 border border-gray-100 grid grid-cols-4 gap-8 hover:bg-slate-300"
         style={{ gridTemplateColumns: "1fr 1fr 1fr 45px" }}
       >
-        <div>
-          <h4 className="text-lg font-semibold">{job.name}</h4>
+        <div className="flex gap-1 items-center">
+          <img
+            className="h-10 w-10 border rounded-full"
+            src={resource.imageUrl || Profile_Pic}
+            alt={`${resource.firstName}`}
+          />
+          <p>{`${resource.firstName} ${resource.lastName}`}</p>
         </div>
-        <ProgressBar startDate={job.startDate} endDate={job.endDate} />
-        <div>
-          {job.resource && typeof job.resource !== "number" ? (
-            <div className="flex gap-1 items-center">
-              <img
-                className="h-10 w-10 border rounded-full"
-                src={job.resource.imageUrl || Profile_Pic}
-                alt={`${job.resource?.firstName}`}
-              />
-              <p>{`${job.resource?.firstName} ${job.resource?.lastName}`}</p>
-            </div>
-          ) : (
-            <p className="text-red-700 italic">not assigned</p>
-          )}
-        </div>
+        <p>{resource.jobs?.length || 0}</p>
+        <WeekView jobs={resource.jobs} />
         <div className="flex  hover:cursor-pointer justify-center items-center w-fit relative">
           <FontAwesomeIcon
             onClick={handleClick}
             className="px-5 text-xl"
             icon={faEllipsisV}
           />
+
           {showOptionsMenu && (
             <OptionsMenu
               options={[
                 { label: "Edit", action: handleEdit },
                 { label: "Delete", action: handleDelete },
+                { label: "More", action: handleViewMore },
               ]}
               onClose={handleClose}
             />
@@ -84,4 +92,4 @@ const JobsCard = ({ job, onDelete, onEdit }: IJobsCardProps) => {
   );
 };
 
-export default JobsCard;
+export default ResourceCard;

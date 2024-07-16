@@ -8,6 +8,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import JobsCard from "../../components/JobsCard/JobsCard";
 import JobForm from "../../components/JobForm/JobForm";
 import { Job } from "../../services/api-responses_interfaces";
+import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
+import { useNavigate } from "react-router-dom";
+import PageTitle from "../../components/PageTitle/PageTitle";
 
 const JobsDashboardPage = () => {
   const queryClient = useQueryClient();
@@ -34,8 +37,9 @@ const JobsDashboardPage = () => {
     },
   });
 
-  if (jobsQuery.isLoading) return <h1>Loading....</h1>;
-  if (jobsQuery.isError) return <h1>Error loading data!!!</h1>;
+  const navigate = useNavigate();
+  if (jobsQuery.isLoading) return <LoadingSpinner />;
+  if (jobsQuery.isError) navigate(`/error/${jobsQuery.error.message}`);
 
   const handleDelete = (id: number): void => {
     //console.log("deletetetetet");
@@ -52,12 +56,10 @@ const JobsDashboardPage = () => {
   };
   return (
     <div>
-      <h1 className="bg-slate-900 font-bold p-1 text-green-800 text-xl">
-        Jobs Dashboard
-      </h1>
+      <PageTitle title={"Jobs Dashboard"} />
       <div>
         <div
-          className="p-2 border border-gray-100 grid grid-cols-4 gap-8 hover:bg-slate-500 text-lg font-bold text-center"
+          className="p-2 border border-gray-100 grid grid-cols-4 gap-8 bg-slate-200 text-lg font-bold text-center"
           style={{ gridTemplateColumns: "1fr 1fr 1fr 10px" }}
         >
           <p>Job</p>

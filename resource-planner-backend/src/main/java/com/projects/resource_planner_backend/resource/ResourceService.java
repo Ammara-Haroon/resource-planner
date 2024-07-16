@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.projects.resource_planner_backend.exceptions.ServiceValidationException;
+import com.projects.resource_planner_backend.exceptions.ValidationErrors;
 import com.projects.resource_planner_backend.job.JobService;
 
 import jakarta.transaction.Transactional;
@@ -54,6 +56,25 @@ public class ResourceService {
 
   public Optional<Resource> findResourceById(Long resId) {
     return this.repo.findById(resId);
+  }
+
+  public Optional<Resource> updateResource(Long id, UpdateResourceDTO data) {
+    Optional<Resource> mayBeResource = this.repo.findById(id);
+    if(mayBeResource.isEmpty()) {
+      return Optional.empty();
+    }
+    Resource foundResource = mayBeResource.get();
+    mapper.map(data,foundResource);
+    Resource updatedResource = this.repo.save(foundResource);
+    return Optional.of(updatedResource);
+  }
+
+  public boolean deleteResource(Long id) {
+    Optional<Resource> mayBeResource = this.repo.findById(id);
+    if(mayBeResource.isEmpty()) return false;
+    
+    this.repo.deleteById(id);
+    return true;
   }
 
   

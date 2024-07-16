@@ -37,7 +37,7 @@ const Modal = ({ job, onClose, onSubmit }: IModalProps) => {
   };
 
   const handlSubmit = (event: any): void => {
-    event.preventDefault();
+    //event.preventDefault();
     const formData =
       Object.fromEntries(new FormData(formRef.current).entries()) || null;
     console.log(formData);
