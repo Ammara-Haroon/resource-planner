@@ -16,7 +16,13 @@ const JobForm = ({ onSubmit }: { onSubmit: (newJob: Partial<Job>) => any }) => {
   });
   const [options, setOptions] = useState<Resource[]>([]);
   useEffect(() => {
-    getAllResources().then((data) => setOptions(data));
+    if (value) {
+      getAvailableResources(value.startDate, value.endDate).then((data) =>
+        setOptions(data)
+      );
+    } else {
+      getAllResources().then((data) => setOptions(data));
+    }
   }, []);
   const handleValueChange = (newValue: any) => {
     newValue.startDate = new Date(newValue.startDate);

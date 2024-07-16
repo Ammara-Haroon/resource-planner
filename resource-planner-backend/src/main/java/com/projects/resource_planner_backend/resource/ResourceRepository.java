@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface ResourceRepository extends JpaRepository<Resource,Long>{
-  @Query("SELECT r FROM Resource r WHERE r NOT IN (SELECT j.resource FROM Job j WHERE j.resource IS NOT NULL AND (j.startDate BETWEEN ?1 AND ?2 OR j.endDate BETWEEN ?1 AND ?2))")
+  @Query("SELECT r FROM Resource r WHERE r NOT IN (SELECT j.resource FROM Job j WHERE j.resource IS NOT NULL AND (j.startDate BETWEEN ?1 AND ?2 OR j.endDate BETWEEN ?1 AND ?2 OR ?1 BETWEEN j.startDate AND j.endDate OR ?2 BETWEEN j.startDate AND j.endDate))")
   List<Resource> findAvailableResourcesBetweenDates(Date startDate,Date endDate);
 }

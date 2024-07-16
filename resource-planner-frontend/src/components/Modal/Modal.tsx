@@ -13,18 +13,23 @@ interface IModalProps {
 }
 const Modal = ({ job, onClose, onSubmit }: IModalProps) => {
   const [options, setOptions] = useState<Resource[]>([]);
-  document.body.style.overflow = "hidden";
-  useEffect(() => {
-    getAvailableResources(job.startDate, job.endDate).then((data) =>
-      setOptions(data)
-    );
-  }, []);
-
   const formRef = useRef<HTMLFormElement | null>(null);
   const [value, setValue] = useState<DateValueType>({
     startDate: job.startDate,
     endDate: job.endDate,
   });
+
+  document.body.style.overflow = "hidden";
+  useEffect(() => {
+    if (value) {
+      getAvailableResources(value.startDate, value.endDate).then((data) =>
+        setOptions(data)
+      );
+    } else {
+      getAllResources().then((data) => setOptions(data));
+    }
+  }, []);
+
   const handleValueChange = (newValue: any) => {
     newValue.startDate = new Date(newValue.startDate);
     newValue.endDate = new Date(newValue.endDate);

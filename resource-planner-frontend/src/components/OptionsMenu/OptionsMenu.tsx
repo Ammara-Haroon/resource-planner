@@ -28,8 +28,8 @@ const OptionsMenu = ({ options, onClose }: IOptionsMenuProps) => {
       >
         <FontAwesomeIcon icon={faClose} />
       </p>
-      {options.map((option) => (
-        <p className={optionStyleClass} onClick={option.action}>
+      {options.map((option, index) => (
+        <p key={index} className={optionStyleClass} onClick={option.action}>
           {option.label}
         </p>
       ))}
