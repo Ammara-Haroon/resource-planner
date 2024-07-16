@@ -3,6 +3,8 @@ package com.projects.resource_planner_backend.resource;
 import java.sql.Date;
 import java.util.List;
 
+import org.hibernate.annotations.ManyToAny;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.projects.resource_planner_backend.job.Job;
@@ -54,7 +56,7 @@ public class Resource {
     this.jobs = jobs;
   }
 
-  @OneToMany(mappedBy = "resource",cascade=CascadeType.DETACH)
+  @OneToMany(mappedBy = "resource")
   @JsonIgnoreProperties("resource")
   List<Job> jobs;
 

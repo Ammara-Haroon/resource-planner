@@ -11,13 +11,17 @@ import SideMenu from "./components/SideMenu/SideMenu";
 function App() {
   return (
     <BrowserRouter>
-      {/* <SideMenu /> */}
-      <Routes>
-        <Route path="/jobs" element={<JobsDashboardPage />} />
-        <Route path="/resources" element={<ResourcesDashboardPage />} />
-        <Route path="/resources/:id" element={<ResourcePage />} />
-        <Route path="/error/:msg" element={<ErrorPage />} />
-      </Routes>
+      <div className="flex flex-col">
+        <SideMenu />
+        <div className="w-full">
+          <Routes>
+            <Route path="/jobs" element={<JobsDashboardPage />} />
+            <Route path="/resources" element={<ResourcesDashboardPage />} />
+            <Route path="/resources/:id" element={<ResourcePage />} />
+            <Route path="/error/:msg" element={<ErrorPage />} />
+          </Routes>
+        </div>
+      </div>
     </BrowserRouter>
   );
 }

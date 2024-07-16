@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.projects.resource_planner_backend.exceptions.ServiceValidationException;
 import com.projects.resource_planner_backend.exceptions.ValidationErrors;
+import com.projects.resource_planner_backend.job.Job;
 import com.projects.resource_planner_backend.job.JobService;
 
 import jakarta.transaction.Transactional;
@@ -30,7 +31,6 @@ public class ResourceService {
   @Autowired
   private ModelMapper mapper;
 
-  
   public List<Resource> findAllResources() {
     return this.repo.findAll();
   }
@@ -72,7 +72,12 @@ public class ResourceService {
   public boolean deleteResource(Long id) {
     Optional<Resource> mayBeResource = this.repo.findById(id);
     if(mayBeResource.isEmpty()) return false;
-    
+    List<Job> jobs = mayBeResource.get().getJobs();
+    long len = jobs.size();
+    for(int i = 0;i < len;++i){
+      Job job = jobs.get(i);
+      job.setResource(null);           
+    };
     this.repo.deleteById(id);
     return true;
   }

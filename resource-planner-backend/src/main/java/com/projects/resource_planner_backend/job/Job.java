@@ -40,7 +40,7 @@ public class Job {
         + resource + "]";
   }
 
-  @ManyToOne(optional = true,cascade=CascadeType.DETACH)
+  @ManyToOne(optional = true)
   @JoinColumn(name="resource_id",nullable = true)
   @JsonIgnoreProperties("jobs")
   private Resource resource; 
