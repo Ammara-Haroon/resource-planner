@@ -59,12 +59,14 @@ public class JobService {
   }
 
   public Optional<Job> updateJob(Long id,UpdateJobDTO data) throws ServiceValidationException {
+    
     Optional<Job> mayBeJob = this.repo.findById(id);
     if(mayBeJob.isEmpty()) {
       return Optional.empty();
     }
     Job foundJob = mayBeJob.get();
     Long resId = data.getResource();
+    if(resId != null){
       Optional<Resource> mayBeResource = this.resourceService.findResourceById(resId);
       if(mayBeResource.isEmpty()){
         ValidationErrors errors = new ValidationErrors();
@@ -73,7 +75,10 @@ public class JobService {
       }
     mapper.map(data,foundJob);
     foundJob.setResource(mayBeResource.get());
-    
+    }else {
+    mapper.map(data,foundJob);
+    foundJob.setResource(null);
+    }
     Job updatedJob = this.repo.save(foundJob);
     return Optional.of(updatedJob);
   }

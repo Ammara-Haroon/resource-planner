@@ -14,7 +14,7 @@ const ResourcePage = () => {
         <FontAwesomeIcon icon={faBackward} />
         <span className="p-2">Back</span>
       </Link>
-      <div className="flex justify-start items-center">
+      <div className="flex justify-start items-center gap-2 p-2">
         <img
           className="w-40 h-40 rounded-full"
           src={resource.imageUrl || ProfilePic}
@@ -24,21 +24,34 @@ const ResourcePage = () => {
           {resource.firstName} {resource.lastName}
         </h1>
       </div>
-      <table className="border w-full">
-        <tr className="border border-black font-bold">
-          <th>Job</th>
-          <th>Start Date</th>
-          <th>End Date</th>
-        </tr>
-        {resource.jobs &&
-          resource.jobs.map((job) => (
-            <tr key={resource.id}>
-              <td>{job.name}</td>
-              <td>{job.startDate?.toLocaleDateString()}</td>
-              <td>{job.endDate?.toLocaleDateString()}</td>
+      <div className="flex flex-col items-center">
+        <table className="border border-size p-2 m-1 box-border w-11/12">
+          <thead className="border border-black font-bold">
+            <tr>
+              <th>Job</th>
+              <th>Start Date</th>
+              <th>End Date</th>
             </tr>
-          ))}
-      </table>
+          </thead>
+          <tbody>
+            {resource.jobs &&
+              resource.jobs.map((job) => (
+                <tr key={resource.id}>
+                  <td className="p-2">{job.name}</td>
+                  <td className="text-center">
+                    {job.startDate?.toLocaleDateString()}
+                  </td>
+                  <td className="text-center">
+                    {job.endDate?.toLocaleDateString()}
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+        {resource.jobs && resource.jobs?.length === 0 && (
+          <p className="text-center">No Jobs Assigned</p>
+        )}
+      </div>
     </div>
   );
 };

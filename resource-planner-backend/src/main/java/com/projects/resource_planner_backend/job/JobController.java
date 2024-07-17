@@ -52,6 +52,8 @@ public class JobController {
   @PutMapping("/{id}")
   public ResponseEntity<Job> updateJob(@PathVariable Long id, @Valid @RequestBody UpdateJobDTO data) throws NotFoundException, BadRequestException {
     try {
+      System.out.println(id);
+      System.out.println(data);
       Optional<Job> mayBeJob = this.jobService.updateJob(id,data);
       if(mayBeJob.isEmpty()){
         throw new NotFoundException(Job.class, id);

@@ -3,7 +3,7 @@ import { Job } from "../../services/api-responses_interfaces";
 import { getAvailableResources } from "../../services/resource-sevices";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
-import Modal from "../Modal/Modal";
+import Modal from "../JobModal/JobModal";
 import ProgressBar from "../ProgressBar/ProgressBar";
 import OptionsMenu from "../OptionsMenu/OptionsMenu";
 import Profile_Pic from "../../assets/profile_placeholder.jpg";

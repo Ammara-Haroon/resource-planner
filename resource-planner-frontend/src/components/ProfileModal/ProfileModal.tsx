@@ -7,6 +7,7 @@ import { getAvailableResources } from "../../services/resource-sevices";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCross, faTimes } from "@fortawesome/free-solid-svg-icons";
 import ProfilePic from "../../assets/profile_placeholder.jpg";
+import { faTimesCircle } from "@fortawesome/free-regular-svg-icons";
 interface IProfileModalProps {
   resource: Resource;
   onClose: () => any;
@@ -18,7 +19,7 @@ const ProfileModal = ({ resource, onClose, onSubmit }: IProfileModalProps) => {
   const formRef = useRef<HTMLFormElement | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(resource.imageUrl);
   const handlSubmit = (event: any): void => {
-    event.preventDefault();
+    //event.preventDefault();
     const formData =
       Object.fromEntries(new FormData(formRef.current).entries()) || null;
     const editedProfile: Resource = { ...resource, ...formData };
@@ -33,10 +34,22 @@ const ProfileModal = ({ resource, onClose, onSubmit }: IProfileModalProps) => {
     newUrl = newUrl?.length > 0 ? newUrl : null;
     setImageUrl(newUrl);
   };
+  const btnStyleClass = "border border-black px-4 py-1 w-15 hover:bg-slate-500";
+  const inputStyleClass = "text-lg font-semibold text-center";
+  const labelStyleClass = "text-right";
+  const handleClose = (): void => {
+    document.body.style.overflow = "visible";
+    onClose();
+  };
 
   return (
     <div className="flex justify-center items-center fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity">
-      <div className="w-11/12 h-2/3 bg-slate-50 flex flex-col justify-center items-center">
+      <div className="bg-slate-200 p-5 flex flex-col gap-5 justify-center items-center  border border-black border-dotted">
+        <FontAwesomeIcon
+          onClick={handleClose}
+          className="self-end hover:text-slate-400 hover:cursor-pointer"
+          icon={faTimesCircle}
+        />
         <div className="m-5 border h-28 w-28  rounded-full ">
           <img
             className="object-cover w-full h-full border border-black rounded-full"
@@ -49,29 +62,25 @@ const ProfileModal = ({ resource, onClose, onSubmit }: IProfileModalProps) => {
           className="flex justify-center items-center"
           ref={formRef}
         >
-          <p className="absolute top-0 right-0">
-            <FontAwesomeIcon
-              onClick={() => {
-                document.body.style.overflow = "visible";
-                onClose();
-              }}
-              icon={faTimes}
-            />
-          </p>
-
-          <div className="relative flex flex-col gap-5 justify-center items-center">
-            <div>
-              <label htmlFor="firstName">First Name:</label>
+          <div className="flex flex-col gap-5">
+            <div
+              className="grid grid-cols-2 gap-5"
+              style={{ gridTemplateColumns: "1fr 1.5fr 1fr" }}
+            >
+              <label className={labelStyleClass} htmlFor="firstName">
+                First Name:
+              </label>
               <input
-                className="text-lg font-semibold text-center"
+                className={inputStyleClass}
                 defaultValue={resource.firstName}
                 name="firstName"
                 id="firstName"
                 required
               ></input>
-            </div>
-            <div>
-              <label htmlFor="lastName">Last Name:</label>
+              <p></p>
+              <label className={labelStyleClass} htmlFor="lastName">
+                Last Name:
+              </label>
               <input
                 className="text-lg font-semibold text-center"
                 defaultValue={resource.lastName}
@@ -79,9 +88,11 @@ const ProfileModal = ({ resource, onClose, onSubmit }: IProfileModalProps) => {
                 id="lastName"
                 required
               ></input>
-            </div>
-            <div>
-              <label htmlFor="imageUrl">Image URL:</label>
+              <p></p>
+
+              <label className={labelStyleClass} htmlFor="imageUrl">
+                Image URL:
+              </label>
               <input
                 className="w-fit text-lg font-semibold text-center"
                 defaultValue={imageUrl || ""}
@@ -89,11 +100,17 @@ const ProfileModal = ({ resource, onClose, onSubmit }: IProfileModalProps) => {
                 name="imageUrl"
                 id="imageUrl"
               ></input>
-              <button onClick={handlePreview}>Preview</button>
+              <button className="font-bold underline" onClick={handlePreview}>
+                Preview
+              </button>
             </div>
-            <div className="flex gap-2">
-              <button type="submit">Save</button>
-              <button onClick={onClose}>Cancel</button>
+            <div className="flex justify-center items-center gap-2">
+              <button className={btnStyleClass} type="submit">
+                Save
+              </button>
+              <button className={btnStyleClass} onClick={handleClose}>
+                Cancel
+              </button>
             </div>
           </div>
         </form>
