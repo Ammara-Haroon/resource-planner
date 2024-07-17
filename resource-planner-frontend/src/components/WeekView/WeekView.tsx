@@ -9,9 +9,6 @@ const WeekView = ({ jobs }: { jobs: Partial<Job>[] | null }) => {
   const dayLabelStyle = "text-xs text-slate-100";
   const weekDays = ["M", "T", "W", "Th", "F"];
 
-  let day = new Date().getDay();
-  day = day === 0 || day === 6 ? 1 : day;
-  //console.log(day);
   const today = new Date();
 
   function getDate(dayNum: number) {
@@ -21,18 +18,27 @@ const WeekView = ({ jobs }: { jobs: Partial<Job>[] | null }) => {
   }
 
   const datesMap = weekDays.map((day, index) => getDate(index));
-  //console.log(datesMap);
+  console.log(datesMap);
 
-  const colorMap = datesMap.map((day) =>
-    jobs?.some(
-      (job) =>
+  const colorMap = datesMap.map((day) => {
+    day.setHours(0, 0, 0, 0);
+    return jobs?.some((job) => {
+      job.startDate?.setHours(0, 0, 0, 0);
+      job.endDate?.setHours(0, 0, 0, 0);
+      return (
         job.startDate &&
         job.startDate <= day &&
         job.endDate &&
         job.endDate >= day
+      );
+    });
+  });
+  console.log(colorMap);
+  datesMap.forEach((day) =>
+    jobs?.forEach((job) =>
+      console.log(job.startDate <= day, job.endDate >= day)
     )
   );
-
   return (
     <div className="flex gap-1">
       {weekDays.map((day, index) => (

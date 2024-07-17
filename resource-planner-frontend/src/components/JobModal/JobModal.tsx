@@ -81,17 +81,18 @@ const JobModal = ({ job, onClose, onSubmit }: IModalProps) => {
   };
   return (
     <div className="flex justify-center items-center fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity">
-      <div className="bg-slate-200 p-5 flex flex-col gap-10 justify-center items-center  border border-black border-dotted">
-        <FontAwesomeIcon
-          onClick={handleClose}
-          className="self-end hover:text-slate-400 hover:cursor-pointer"
-          icon={faTimesCircle}
-        />
-        <form
-          onSubmit={handlSubmit}
-          className="flex justify-center items-center"
-          ref={formRef}
-        >
+      <form
+        onSubmit={handlSubmit}
+        className="flex justify-center items-center"
+        ref={formRef}
+      >
+        <div className="bg-slate-200 p-5 flex flex-col gap-10 justify-center items-center  border border-black border-dotted">
+          <FontAwesomeIcon
+            onClick={handleClose}
+            className="self-end hover:text-slate-400 hover:cursor-pointer"
+            icon={faTimesCircle}
+          />
+
           <div
             className="grid grid-cols-2 gap-5"
             style={{ gridTemplateColumns: "1fr 2fr" }}
@@ -130,22 +131,17 @@ const JobModal = ({ job, onClose, onSubmit }: IModalProps) => {
               ))}
             </select>
           </div>
-        </form>
-        <div className="flex justify-center items-center gap-2">
-          <button className={btnStyleClass} type="submit">
-            Save
-          </button>
-          <button
-            className={btnStyleClass}
-            onClick={() => {
-              document.body.style.overflow = "visible";
-              onClose();
-            }}
-          >
-            Close
-          </button>
+
+          <div className="flex justify-center items-center gap-2">
+            <button className={btnStyleClass} type="submit">
+              Save
+            </button>
+            <button className={btnStyleClass} onClick={handleClose}>
+              Close
+            </button>
+          </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 };
