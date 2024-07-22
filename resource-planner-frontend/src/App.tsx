@@ -11,9 +11,9 @@ import SideMenu from "./components/SideMenu/SideMenu";
 function App() {
   return (
     <BrowserRouter>
-      <div className="flex flex-col">
+      <div className="flex flex-row font-mono">
         <SideMenu />
-        <div className="w-full">
+        <div className="w-full  bg-gradient-to-b from-slate-900 to-sky-700 my-1">
           <Routes>
             <Route path="/jobs" element={<JobsDashboardPage />} />
             <Route path="/resources" element={<ResourcesDashboardPage />} />

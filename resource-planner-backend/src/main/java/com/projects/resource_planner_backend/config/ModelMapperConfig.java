@@ -16,6 +16,7 @@ public class ModelMapperConfig {
   @Bean
   public ModelMapper modelMapper() {
     ModelMapper mapper = new ModelMapper();
+    mapper.getConfiguration().setSkipNullEnabled(true);
     mapper.typeMap(CreateJobDTO.class, Job.class);
     mapper.typeMap(CreateResourceDTO.class, Resource.class);
     mapper.typeMap(UpdateJobDTO.class, Job.class);

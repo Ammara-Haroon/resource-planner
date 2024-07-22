@@ -2,11 +2,11 @@ import React from "react";
 import { Link, NavLink } from "react-router-dom";
 
 const SideMenu = () => {
-  const linkStyle = "p-2 font-bold hover:bg-slate-700";
+  const linkStyle = "p-2 hover:bg-slate-700 font-mono text-pink-500 uppercase";
   const activeLinkStyle = `${linkStyle} border border-slate-700`;
 
   return (
-    <div className="border border-black w-screen flex justify-around p-2 m-2 bg-slate-100">
+    <div className="border border-black flex flex-col justify-start m-1 text-sky-500 bg-gradient-to-b from-slate-900 to-sky-700">
       <NavLink
         to="/jobs"
         className={({ isActive, isPending }) =>

@@ -56,7 +56,8 @@ const ResourceCard = ({ resource, onDelete, onEdit }: IResourceCardProps) => {
         />
       )}
       <div
-        className="p-2 border border-gray-100 grid grid-cols-4 gap-8 hover:bg-slate-300"
+        className="p-2 border border-neutral-100 grid grid-cols-4 gap-8
+        bg-slate-100  hover:bg-slate-300 text-slate-800"
         style={{ gridTemplateColumns: "1fr 1fr 1fr 45px" }}
       >
         <div className="flex gap-1 items-center">
@@ -67,8 +68,10 @@ const ResourceCard = ({ resource, onDelete, onEdit }: IResourceCardProps) => {
           />
           <p>{`${resource.firstName} ${resource.lastName}`}</p>
         </div>
-        <p>{resource.jobs?.length || 0}</p>
-        <WeekView jobs={resource.jobs} />
+        <p className="text-center">{resource.jobs?.length || 0}</p>
+        <div className="flex justify-center">
+          <WeekView jobs={resource.jobs} />
+        </div>
         <div className="flex  hover:cursor-pointer justify-center items-center w-fit relative">
           <FontAwesomeIcon
             onClick={handleClick}

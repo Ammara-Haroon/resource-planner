@@ -6,6 +6,7 @@ export default {
     "./node_modules/react-tailwindcss-datepicker/dist/index.esm.js",
   ],
   theme: {
+    fontFamily: { lato: "Lato" },
     extend: {},
   },
   plugins: [],

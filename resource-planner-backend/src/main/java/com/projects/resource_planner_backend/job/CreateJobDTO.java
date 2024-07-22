@@ -13,6 +13,12 @@ public class CreateJobDTO {
   private Date startDate;
   
   
+  @Override
+  public String toString() {
+    return "CreateJobDTO [name=" + name + ", startDate=" + startDate + ", endDate=" + endDate + ", resource=" + resource
+        + "]";
+  }
+
   private Date endDate;
   
   private Long resource;

@@ -10,7 +10,10 @@ const WeekView = ({ jobs }: { jobs: Partial<Job>[] | null }) => {
   const weekDays = ["M", "T", "W", "Th", "F"];
 
   const today = new Date();
-
+  // const dayIndex = today.getDay();
+  // const weekDays = weekDaysReal
+  //   .slice(dayIndex - 1)
+  //  .concat(weekDaysReal.slice(0, dayIndex - 1));
   function getDate(dayNum: number) {
     const day = today.getDay();
     const diff = today.getDate() - day + (day == 0 ? -6 : 1) + dayNum; // adjust when day is sunday
@@ -33,12 +36,12 @@ const WeekView = ({ jobs }: { jobs: Partial<Job>[] | null }) => {
       );
     });
   });
-  console.log(colorMap);
-  datesMap.forEach((day) =>
-    jobs?.forEach((job) =>
-      console.log(job.startDate <= day, job.endDate >= day)
-    )
-  );
+  // console.log(colorMap);
+  // datesMap.forEach((day) =>
+  //   jobs?.forEach((job) =>
+  //     console.log(job.startDate <= day, job.endDate >= day)
+  //   )
+  // );
   return (
     <div className="flex gap-1">
       {weekDays.map((day, index) => (

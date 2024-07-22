@@ -13,22 +13,22 @@ const ProgressBar = ({ startDate, endDate }: IProgressBarProps) => {
     ) * 100,
     100
   );
-
-  //console.log(progress);
   return (
-    <div className="hover:bg-slate-500">
+    <div>
       <div className="flex justify-between">
-        <span>
-          {startDate.getDate()}/{startDate.getMonth() + 1}
-        </span>
-        <span>
-          {endDate.getDate()}/{endDate.getMonth() + 1}
-        </span>
+        <small>
+          {startDate.getDate()}{" "}
+          {startDate.toLocaleString("default", { month: "short" })}
+        </small>
+        <small>
+          {endDate.getDate()}{" "}
+          {endDate.toLocaleString("default", { month: "short" })}
+        </small>
       </div>
-      <div className="border-4 rounded-xl border-slate-700 w-full h-5 bg-gray-400">
+      <div className="border-4 rounded-xl border-neutral-700 w-full h-5 bg-neutral-300">
         {progress !== 0 && (
           <div
-            className="border-4 rounded-xl border-transparent w-full h-full bg-green-900"
+            className="border-4 rounded-xl border-transparent w-full h-full bg-pink-500"
             style={{ width: `${progress}%` }}
           ></div>
         )}

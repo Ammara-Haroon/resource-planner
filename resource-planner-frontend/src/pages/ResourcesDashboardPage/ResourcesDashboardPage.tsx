@@ -73,9 +73,9 @@ const ResourcesDashboardPage = () => {
       <div>
         <div
           className="p-2 border border-gray-100 grid grid-cols-4 gap-8 bg-slate-200 text-lg font-bold text-center"
-          style={{ gridTemplateColumns: "1fr 1fr 1fr 10px" }}
+          style={{ gridTemplateColumns: "1fr 1fr 1fr 45px" }}
         >
-          <p>Team Memeber</p>
+          <p>Team Member</p>
           <p>Assigned Jobs</p>
           <p>Availability</p>
         </div>{" "}

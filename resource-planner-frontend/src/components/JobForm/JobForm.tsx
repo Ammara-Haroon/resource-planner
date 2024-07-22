@@ -60,7 +60,7 @@ const JobForm = ({ onSubmit }: { onSubmit: (newJob: Partial<Job>) => any }) => {
   const formRef = useRef<HTMLFormElement | null>(null);
 
   const handleSubmit = (event: any): void => {
-    event.preventDefault();
+    //event.preventDefault();
     const formData =
       Object.fromEntries(
         new FormData(formRef.current || undefined).entries()
@@ -78,7 +78,8 @@ const JobForm = ({ onSubmit }: { onSubmit: (newJob: Partial<Job>) => any }) => {
   };
   return (
     <form
-      className="bg-slate-400 w-full fixed bottom-0 border border-black z-50"
+      className="bg-slate-400 fixed bottom-0 border-4 border-slate-700 z-50 box-border mx-2"
+      style={{ width: "calc(100%-50px)" }}
       ref={formRef}
       onSubmit={handleSubmit}
     >

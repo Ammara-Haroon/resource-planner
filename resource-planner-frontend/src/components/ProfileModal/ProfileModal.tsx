@@ -28,7 +28,10 @@ const ProfileModal = ({ resource, onClose, onSubmit }: IProfileModalProps) => {
     onSubmit(editedProfile);
   };
 
-  const handlePreview = (): void => {
+  const handlePreview = (
+    event: MouseEvent<HTMLButtonElement, MouseEvent>
+  ): void => {
+    event.preventDefault();
     let newUrl: string | null =
       new FormData(formRef.current).get("imageUrl").toString() || null;
     newUrl = newUrl?.length > 0 ? newUrl : null;
