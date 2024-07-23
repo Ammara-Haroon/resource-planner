@@ -7,11 +7,12 @@ import ResourcesDashboardPage from "./pages/ResourcesDashboardPage/ResourcesDash
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
 import ResourcePage from "./pages/ReosurcePage/ResourcePage";
 import SideMenu from "./components/SideMenu/SideMenu";
+import GanttChartPage from "./pages/GanttChartPage/GanttChartPage";
 
 function App() {
   return (
     <BrowserRouter>
-      <div className="flex flex-row font-mono">
+      <div className="flex flex-row font-mono min-h-screen">
         <SideMenu />
         <div className="w-full  bg-gradient-to-b from-slate-900 to-sky-700 my-1">
           <Routes>

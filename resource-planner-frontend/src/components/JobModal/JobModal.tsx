@@ -7,11 +7,8 @@ import {
   getAvailableResources,
 } from "../../services/resource-sevices";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCross,
-  faTimes,
-  faTimesCircle,
-} from "@fortawesome/free-solid-svg-icons";
+
+import { faTimesCircle } from "@fortawesome/free-regular-svg-icons";
 
 interface IModalProps {
   job: Job;
@@ -72,7 +69,8 @@ const JobModal = ({ job, onClose, onSubmit }: IModalProps) => {
     setResourceId(event.target.value);
   };
 
-  const btnStyleClass = "border border-black px-4 py-1 w-15 hover:bg-slate-500";
+  const btnStyleClass =
+    "border border-black px-4 py-1 w-15 bg-slate-800 text-neutral-200  hover:text-pink-600";
   const inputStyleClass = "text-lg font-semibold text-center";
   const labelStyleClass = "text-right p-1";
   const handleClose = (): void => {
@@ -89,7 +87,7 @@ const JobModal = ({ job, onClose, onSubmit }: IModalProps) => {
         <div className="bg-slate-200 p-5 flex flex-col gap-10 justify-center items-center  border border-black border-dotted">
           <FontAwesomeIcon
             onClick={handleClose}
-            className="self-end hover:text-slate-400 hover:cursor-pointer"
+            className="self-end  hover:text-pink-600 hover:cursor-pointer"
             icon={faTimesCircle}
           />
 

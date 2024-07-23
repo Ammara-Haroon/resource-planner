@@ -4,7 +4,7 @@ import { Job } from "../../services/api-responses_interfaces";
 const WeekView = ({ jobs }: { jobs: Partial<Job>[] | null }) => {
   const dayBoxStyle = "flex justify-center items-center p-1 h-5 w-5";
   const dayBoxGreyed = `${dayBoxStyle} bg-slate-300`;
-  const dayBoxFilled = `${dayBoxStyle} bg-green-300`;
+  const dayBoxFilled = `${dayBoxStyle} bg-pink-300`;
 
   const dayLabelStyle = "text-xs text-slate-100";
   const weekDays = ["M", "T", "W", "Th", "F"];

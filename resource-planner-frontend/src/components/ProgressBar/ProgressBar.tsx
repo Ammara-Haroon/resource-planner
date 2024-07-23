@@ -25,10 +25,10 @@ const ProgressBar = ({ startDate, endDate }: IProgressBarProps) => {
           {endDate.toLocaleString("default", { month: "short" })}
         </small>
       </div>
-      <div className="border-4 rounded-xl border-neutral-700 w-full h-5 bg-neutral-300">
+      <div className="border rounded-sm border-neutral-400 w-full h-4 bg-neutral-300">
         {progress !== 0 && (
           <div
-            className="border-4 rounded-xl border-transparent w-full h-full bg-pink-500"
+            className="border rounded-sm h-4 w-full h-full bg-pink-500"
             style={{ width: `${progress}%` }}
           ></div>
         )}

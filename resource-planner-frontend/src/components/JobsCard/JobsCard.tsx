@@ -45,7 +45,7 @@ const JobsCard = ({ job, onDelete, onEdit }: IJobsCardProps) => {
         className="p-2 border border-gray-100 grid grid-cols-4 gap-8 bg-neutral-200 hover:bg-slate-300 text-slate-800 text-sm font-semibold"
         style={{ gridTemplateColumns: "1fr 1fr 1fr 45px" }}
       >
-        <div>
+        <div className="flex items-center">
           <h4 className=" font-semibold">{job.name}</h4>
         </div>
         <ProgressBar startDate={job.startDate} endDate={job.endDate} />

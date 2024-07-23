@@ -37,7 +37,8 @@ const ProfileModal = ({ resource, onClose, onSubmit }: IProfileModalProps) => {
     newUrl = newUrl?.length > 0 ? newUrl : null;
     setImageUrl(newUrl);
   };
-  const btnStyleClass = "border border-black px-4 py-1 w-15 hover:bg-slate-500";
+  const btnStyleClass =
+    "bg-slate-800 text-neutral-200 border border-black px-4 py-1 w-15  hover:text-pink-600";
   const inputStyleClass = "text-lg font-semibold text-center";
   const labelStyleClass = "text-right";
   const handleClose = (): void => {
@@ -50,7 +51,7 @@ const ProfileModal = ({ resource, onClose, onSubmit }: IProfileModalProps) => {
       <div className="bg-slate-200 p-5 flex flex-col gap-5 justify-center items-center  border border-black border-dotted">
         <FontAwesomeIcon
           onClick={handleClose}
-          className="self-end hover:text-slate-400 hover:cursor-pointer"
+          className="self-end  hover:text-pink-600 hover:cursor-pointer"
           icon={faTimesCircle}
         />
         <div className="m-5 border h-28 w-28  rounded-full ">
@@ -103,7 +104,10 @@ const ProfileModal = ({ resource, onClose, onSubmit }: IProfileModalProps) => {
                 name="imageUrl"
                 id="imageUrl"
               ></input>
-              <button className="font-bold underline" onClick={handlePreview}>
+              <button
+                className="font-bold underline hover:text-pink-600"
+                onClick={handlePreview}
+              >
                 Preview
               </button>
             </div>
