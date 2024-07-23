@@ -14,3 +14,32 @@ export const getDatesInMonthCalendar = (year: number, month: number) => {
 
   return dates;
 };
+
+export const getMaxDate = (jobs: Job[]): Date => {
+  let maxDate = new Date(jobs[0].endDate);
+  for (let i = 0; i < jobs.length; ++i) {
+    console.log(jobs[i].endDate, maxDate);
+    if (jobs[i].endDate.getTime() > maxDate.getTime()) {
+      maxDate = new Date(jobs[i].endDate);
+    }
+  }
+  return maxDate;
+};
+export const colors = [
+  "#ef719b",
+  "#b460db",
+  "#ff8039",
+  "rgb(134 239 172)",
+  "#55bedb",
+  "#f7de20",
+];
+export const getMinDate = (jobs: Job[]): Date => {
+  let minDate = new Date(jobs[0].endDate);
+  for (let i = 0; i < jobs.length; ++i) {
+    console.log(jobs[i].startDate, minDate);
+    if (jobs[i].startDate.getTime() < minDate.getTime()) {
+      minDate = new Date(jobs[i].startDate);
+    }
+  }
+  return minDate;
+};

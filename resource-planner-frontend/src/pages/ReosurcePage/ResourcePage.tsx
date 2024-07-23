@@ -1,14 +1,61 @@
-import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { ChangeEvent, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Resource } from "../../services/api-responses_interfaces";
 import ProfilePic from "../../assets/profile_placeholder.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBackward } from "@fortawesome/free-solid-svg-icons";
 import MonthView from "../../components/MonthView/MonthView";
+import ErrorPage from "../ErrorPage/ErrorPage";
+import { colors, getMaxDate, getMinDate } from "../../services/utils";
 const ResourcePage = () => {
   const location = useLocation();
-  const resource: Resource = location.state.resourceData;
+  const resource: Resource = location.state?.resourceData;
+  const navigate = useNavigate();
   console.log(resource);
+  if (!resource) navigate("/error/Could not find the requested page.");
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  const minYear = getMinDate(resource.jobs).getFullYear();
+  const maxYear = getMaxDate(resource.jobs).getFullYear();
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
+  const [selectedYear, setSelectedYear] = useState(minYear);
+  const years = new Array();
+  for (let i = minYear; i <= maxYear; ++i) {
+    years.push(i);
+  }
+  console.log(minYear);
+
+  const handleYearChange = (event: ChangeEvent<HTMLSelectElement>): void => {
+    console.log("year", event.target.value);
+    setSelectedYear(parseInt(event.target.value));
+  };
+
+  const handleMonthChange = (event: ChangeEvent<HTMLSelectElement>): void => {
+    console.log("month", event.target.value);
+
+    setSelectedMonth(parseInt(event.target.value));
+  };
+
+  const filteredJobs = resource.jobs?.filter(
+    (job) =>
+      (job.startDate?.getMonth() === selectedMonth &&
+        job.startDate?.getFullYear() === selectedYear) ||
+      (job.endDate?.getMonth() === selectedMonth &&
+        job.endDate?.getFullYear() === selectedYear)
+  );
+
   return (
     <div>
       <Link className="m-2 text-pink-500 uppercase " to={"/resources"}>
@@ -38,9 +85,12 @@ const ResourcePage = () => {
               </tr>
             </thead>
             <tbody>
-              {resource.jobs &&
-                resource.jobs.map((job) => (
-                  <tr key={resource.id}>
+              {filteredJobs && filteredJobs.length > 0 ? (
+                filteredJobs.map((job, index) => (
+                  <tr
+                    key={resource.id}
+                    style={{ color: colors[index % colors.length] }}
+                  >
                     <td className="w-fit px-2 py-1 border border-white">
                       {job.startDate?.toLocaleDateString()}
                       {" - "}
@@ -48,11 +98,32 @@ const ResourcePage = () => {
                     </td>
                     <td className="w-3/5">{job.name}</td>
                   </tr>
-                ))}
+                ))
+              ) : (
+                <p>No Jobs To Display</p>
+              )}
             </tbody>
           </table>
           <div>
-            <MonthView month={6} year={2024} jobs={resource.jobs} />
+            <select onChange={handleMonthChange} defaultValue={selectedMonth}>
+              {months.map((month, index) => (
+                <option key={index} value={index}>
+                  {month}
+                </option>
+              ))}
+            </select>
+            <select onChange={handleYearChange} defaultValue={selectedYear}>
+              {years.map((year, index) => (
+                <option key={index} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+            <MonthView
+              month={selectedMonth}
+              year={selectedYear}
+              jobs={filteredJobs}
+            />
           </div>
         </div>
         {resource.jobs && resource.jobs?.length === 0 && (

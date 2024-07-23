@@ -7,7 +7,7 @@ import ResourcesDashboardPage from "./pages/ResourcesDashboardPage/ResourcesDash
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
 import ResourcePage from "./pages/ReosurcePage/ResourcePage";
 import SideMenu from "./components/SideMenu/SideMenu";
-import GanttChartPage from "./pages/GanttChartPage/GanttChartPage";
+import GanttChartPage from "./components/GanttChart/GanttChart";
 
 function App() {
   return (
