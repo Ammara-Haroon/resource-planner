@@ -60,7 +60,7 @@ const JobsCard = ({ job, onDelete, onEdit }: IJobsCardProps) => {
               <p>{`${job.resource?.firstName} ${job.resource?.lastName}`}</p>
             </div>
           ) : (
-            <p className="text-red-700 italic">not assigned</p>
+            <p className="text-pink-900 italic">not assigned</p>
           )}
         </div>
         <div className="flex  hover:cursor-pointer justify-center items-center w-fit relative">

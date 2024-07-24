@@ -112,7 +112,7 @@ const JobsDashboardPage = () => {
               style={{ gridTemplateColumns: "1fr 1fr 1fr 10px" }}
             >
               <p>Job</p>
-              <p>Progress</p>
+              <p>Timeline</p>
               <p>Assigned To</p>
             </div>{" "}
             {/*className="grid grid-cols-1 divide-y-2 gap-2"> */}

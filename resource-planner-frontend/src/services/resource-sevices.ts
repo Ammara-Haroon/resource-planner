@@ -1,6 +1,6 @@
 import axios from "axios";
 import { BACKEND_BASE_URL } from "./api-config";
-import { Resource } from "./api-responses_interfaces";
+import { Resource, ResourceData } from "./api-responses_interfaces";
 import { cleanJobs } from "./job-services";
 
 export const getAllResources = async (): Promise<Resource[]> => {
@@ -15,14 +15,20 @@ export const getAllResources = async (): Promise<Resource[]> => {
   return data;
 };
 
-export const createResource = async (
-  data: Partial<Resource>
-): Promise<Resource> => {
-  const response = await axios.post(
-    `${BACKEND_BASE_URL}/resources`,
-    (data = data)
-  );
-  return response.data;
+export const createResource = async (data: FormData): Promise<Resource> => {
+  //console.log({ data: data, imageFile: data.imageFile });
+  try {
+    const mydata = { data: { txt: "aaa" } };
+    console.log(data);
+    const response = await axios.post(`${BACKEND_BASE_URL}/resources`, data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (err: any) {
+    console.log(err);
+  }
 };
 
 export const deleteResource = async (id: number): Promise<void> => {

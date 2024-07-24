@@ -13,3 +13,10 @@ export interface Resource {
   imageUrl: string | null;
   jobs: Partial<Job>[] | null;
 }
+
+export interface ResourceData {
+  id: number;
+  firstName: string;
+  lastName: string;
+  imageFile: File | null;
+}

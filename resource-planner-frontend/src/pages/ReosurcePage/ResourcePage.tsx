@@ -77,9 +77,9 @@ const ResourcePage = () => {
           className="grid grid-cols-2"
           style={{ gridTemplateColumns: "1.5fr 2fr" }}
         >
-          <table className="border border-size p-2 m-1 box-border">
-            <thead className="border border-black font-bold">
-              <tr className="w-fit">
+          <table className="border p-2 m-1 box-border">
+            <thead className="border font-bold">
+              <tr className="w-fit text-neutral-200">
                 <th>Duration</th>
                 <th>Job</th>
               </tr>

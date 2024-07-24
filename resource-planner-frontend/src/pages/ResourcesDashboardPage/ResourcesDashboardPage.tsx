@@ -1,5 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Resource } from "../../services/api-responses_interfaces";
+import {
+  Resource,
+  ResourceData,
+} from "../../services/api-responses_interfaces";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 import { useNavigate } from "react-router-dom";
 import PageTitle from "../../components/PageTitle/PageTitle";
@@ -48,7 +51,7 @@ const ResourcesDashboardPage = () => {
     deleteMutation.mutate(id);
   };
 
-  const handleAdd = (newResource: Partial<Resource>): void => {
+  const handleAdd = (newResource: FormData): void => {
     console.log(newResource);
     addMutation.mutate(newResource);
   };

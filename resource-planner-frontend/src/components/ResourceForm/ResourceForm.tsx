@@ -1,6 +1,10 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import Datepicker, { DateValueType } from "react-tailwindcss-datepicker";
-import { Job, Resource } from "../../services/api-responses_interfaces";
+import {
+  Job,
+  Resource,
+  ResourceData,
+} from "../../services/api-responses_interfaces";
 import {
   getAllResources,
   getAvailableResources,
@@ -11,20 +15,33 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 const ResourceForm = ({
   onSubmit,
 }: {
-  onSubmit: (newResource: Partial<Resource>) => any;
+  onSubmit: (newResource: ResourceData) => any;
 }) => {
   const formRef = useRef<HTMLFormElement | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
 
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      setPreview(URL.createObjectURL(file));
+    }
+  };
   const handleSubmit = (event: any): void => {
-    //event.preventDefault();
-    const formData =
-      Object.fromEntries(
-        new FormData(formRef.current || undefined).entries()
-      ) || null;
-    const newResource: Partial<Resource> = { ...formData };
+    event.preventDefault();
+    const formData = Object.fromEntries(
+      new FormData(formRef.current).entries()
+    );
+    //formData[imageFile] = selectedFile;
+    console.log(formData);
+    const newResource: ResourceData = {
+      ...formData,
+    };
     console.log(newResource);
     onSubmit(newResource);
   };
+
   return (
     <form
       className="bg-slate-400 fixed bottom-0 border-4 border-slate-700 z-50 box-border mx-2"
@@ -34,7 +51,7 @@ const ResourceForm = ({
     >
       <div
         className="p-2 border border-gray-100 grid grid-cols-4 gap-8 hover:bg-slate-500"
-        style={{ gridTemplateColumns: "1fr 1fr 1fr 10px" }}
+        style={{ gridTemplateColumns: "1fr 1fr 1fr 45px" }}
       >
         <input
           className="text-lg font-semibold"
@@ -49,9 +66,10 @@ const ResourceForm = ({
           required
         ></input>
         <input
+          type="file"
           className="text-lg font-semibold"
-          name="imageUrl"
-          placeholder="Image URL"
+          name="imageFile"
+          onChange={handleFileChange}
         ></input>
         <button type="submit">
           <FontAwesomeIcon icon={faPlus} />

@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.projects.resource_planner_backend.exceptions.ServiceValidationException;
 import com.projects.resource_planner_backend.exceptions.ValidationErrors;
@@ -80,6 +81,25 @@ public class ResourceService {
     };
     this.repo.deleteById(id);
     return true;
+  }
+
+  public Resource createResource(String firstName, String lastName, MultipartFile imageFile) {
+    Resource newResource = new Resource();
+    newResource.setFirstName(firstName);
+    newResource.setLastName(lastName);
+    System.out.println(imageFile);
+    String imageURL = null;
+    if(!imageFile.isEmpty()) {
+      imageURL = uploadImage(imageFile);
+    }
+    newResource.setImageUrl(imageURL);
+    return this.repo.save(newResource);
+    
+  }
+
+  private String uploadImage(MultipartFile imageFile) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'uploadImage'");
   }
 
   

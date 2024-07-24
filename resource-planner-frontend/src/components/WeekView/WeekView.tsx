@@ -21,7 +21,7 @@ const WeekView = ({ jobs }: { jobs: Partial<Job>[] | null }) => {
   }
 
   const datesMap = weekDays.map((day, index) => getDate(index));
-  console.log(datesMap);
+  //console.log(datesMap);
 
   const colorMap = datesMap.map((day) => {
     day.setHours(0, 0, 0, 0);

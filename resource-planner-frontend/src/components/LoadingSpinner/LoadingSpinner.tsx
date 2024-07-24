@@ -4,7 +4,7 @@ const LoadingSpinner = () => {
   return (
     <div
       data-testid="spinner"
-      className="animate-spin flex w-full h-full fixed z-10 bg-transparent justify-center items-center"
+      className="animate-spin flex w-screen h-screen fixed z-10 bg-transparent justify-center items-center"
     >
       <FontAwesomeIcon
         className="text-5xl text-slate-500 z-10"

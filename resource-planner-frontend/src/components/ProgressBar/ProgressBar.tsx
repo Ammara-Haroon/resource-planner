@@ -19,10 +19,14 @@ const ProgressBar = ({ startDate, endDate }: IProgressBarProps) => {
         <small>
           {startDate.getDate()}{" "}
           {startDate.toLocaleString("default", { month: "short" })}
+          {" ' "}
+          {startDate.getFullYear() % 1000}
         </small>
         <small>
           {endDate.getDate()}{" "}
           {endDate.toLocaleString("default", { month: "short" })}
+          {" ' "}
+          {endDate.getFullYear() % 1000}
         </small>
       </div>
       <div className="border rounded-sm border-neutral-400 w-full h-4 bg-neutral-300">
