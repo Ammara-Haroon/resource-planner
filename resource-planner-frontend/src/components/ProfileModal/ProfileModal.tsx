@@ -28,15 +28,20 @@ const ProfileModal = ({ resource, onClose, onSubmit }: IProfileModalProps) => {
     resource.imageUrl || ProfilePic
   );
   const handleSubmit = (event: any): void => {
-    event.preventDefault();
+    //event.preventDefault();
     const formData = new FormData(formRef.current);
-
-    formData.append("imageFile", selectedFile);
+    if (
+      (resource.imageUrl || imageUrl !== ProfilePic) &&
+      imageUrl !== resource.imageUrl
+    ) {
+      formData.append("imageFile", selectedFile || new File([], "tmp"));
+      console.log(formData);
+    }
     const editedProfile: ResourceData = {
       id: resource.id,
       ...Object.fromEntries(formData.entries()),
     };
-    if (selectedFile && selectedFile.size === 0) editedProfile.imageFile = null;
+
     console.log(editedProfile);
     onSubmit(editedProfile);
   };

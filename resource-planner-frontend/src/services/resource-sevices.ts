@@ -29,9 +29,14 @@ export const deleteResource = async (id: number): Promise<void> => {
 };
 export const updateResource = async (resource: ResourceData): Promise<void> => {
   console.log(`${BACKEND_BASE_URL}/resources/${resource.id}`, resource);
-  const response = await axios.put(
+  const response = await axios.patch(
     `${BACKEND_BASE_URL}/resources/${resource.id}`,
-    resource
+    resource,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
   );
 };
 

@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -60,7 +61,7 @@ public class ResourceController {
       return txt;
     }
   }
-   @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)//consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)//consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<Resource> createResource(@RequestPart String firstName,@RequestParam String lastName, @RequestPart MultipartFile imageFile) 
   {
     System.out.println(firstName);
@@ -74,9 +75,11 @@ public class ResourceController {
     //  return new ResponseEntity<>(null,HttpStatus.OK);
   }
   
-  @PutMapping("/{id}")
-  public ResponseEntity<Resource> updateResource(@PathVariable Long id, @Valid @RequestBody UpdateResourceDTO data) throws NotFoundException {
-      Optional<Resource> mayBeResource = this.resourceService.updateResource(id,data);
+  @PatchMapping(path = "/{id}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)//consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  public ResponseEntity<Resource> createResource(@PathVariable Long id, @RequestPart String firstName,@RequestParam String lastName, @RequestPart(required = false) MultipartFile imageFile) throws NotFoundException
+  {
+      System.out.println(imageFile);
+      Optional<Resource> mayBeResource = this.resourceService.updateResource(id,firstName,lastName,imageFile);
       if(mayBeResource.isEmpty()){
         throw new NotFoundException(Resource.class, id);
       }

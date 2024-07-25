@@ -31,7 +31,7 @@ const ResourceForm = ({
     }
   };
   const handleSubmit = (event: any): void => {
-    event.preventDefault();
+    //event.preventDefault();
     const formData = Object.fromEntries(
       new FormData(formRef.current).entries()
     );

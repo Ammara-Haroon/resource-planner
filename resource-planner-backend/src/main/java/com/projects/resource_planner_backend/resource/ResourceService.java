@@ -181,5 +181,28 @@ public class ResourceService {
     return url;
   }
 
+  public Optional<Resource> updateResource(Long id, String firstName, String lastName, MultipartFile imageFile) {
+    Optional<Resource> mayBeResource = this.repo.findById(id);
+    if(mayBeResource.isEmpty()) {
+      return Optional.empty();
+    }
+    Resource foundResource = mayBeResource.get();
+    foundResource.setFirstName(firstName);
+    foundResource.setLastName(lastName);
+    String imageURL;
+    if(imageFile == null){
+      imageURL = foundResource.getImageUrl();
+    } else if(imageFile.isEmpty()){
+      imageURL = null;
+      deleteImage(foundResource.getId().toString());
+    } else {
+      deleteImage(foundResource.getId().toString());
+      imageURL = uploadImage(imageFile,foundResource.getId().toString());
+    }
+    foundResource.setImageUrl(imageURL);
+    Resource updatedResource = this.repo.save(foundResource);
+    return Optional.of(updatedResource);
+  }
+
   
 }
