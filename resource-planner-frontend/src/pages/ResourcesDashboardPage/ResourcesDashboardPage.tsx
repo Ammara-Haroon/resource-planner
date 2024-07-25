@@ -56,7 +56,7 @@ const ResourcesDashboardPage = () => {
     addMutation.mutate(newResource);
   };
 
-  const handleEdit = (resource: Resource): void => {
+  const handleEdit = (resource: ResourceData): void => {
     updateMutation.mutate(resource);
   };
   const labelStyleClass = "text-neutral-200";

@@ -16,25 +16,18 @@ export const getAllResources = async (): Promise<Resource[]> => {
 };
 
 export const createResource = async (data: FormData): Promise<Resource> => {
-  //console.log({ data: data, imageFile: data.imageFile });
-  try {
-    const mydata = { data: { txt: "aaa" } };
-    console.log(data);
-    const response = await axios.post(`${BACKEND_BASE_URL}/resources`, data, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    return response.data;
-  } catch (err: any) {
-    console.log(err);
-  }
+  const response = await axios.post(`${BACKEND_BASE_URL}/resources`, data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return response.data;
 };
 
 export const deleteResource = async (id: number): Promise<void> => {
   const response = await axios.delete(`${BACKEND_BASE_URL}/resources/${id}`);
 };
-export const updateResource = async (resource: Resource): Promise<void> => {
+export const updateResource = async (resource: ResourceData): Promise<void> => {
   console.log(`${BACKEND_BASE_URL}/resources/${resource.id}`, resource);
   const response = await axios.put(
     `${BACKEND_BASE_URL}/resources/${resource.id}`,
