@@ -14,8 +14,45 @@ import {
 } from "../../services/resource-sevices";
 import ResourceCard from "../../components/ResourceCard/ResourceCard";
 import ResourceForm from "../../components/ResourceForm/ResourceForm";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFilter, faRightLeft } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
 
 const ResourcesDashboardPage = () => {
+  const sortOptions = [
+    {
+      value: "team-ASC",
+      label: "A-Z",
+      fn: (resource1: Resource, resource2: Resource) =>
+        `${resource1.firstName + resource1.lastName}`.localeCompare(
+          `${resource2.firstName + resource2.lastName}`
+        ),
+    },
+    {
+      value: "team-DESC",
+      label: "Z-A",
+      fn: (resource1: Resource, resource2: Resource) =>
+        `${resource2.firstName + resource2.lastName}`.localeCompare(
+          `${resource1.firstName + resource1.lastName}`
+        ),
+    },
+    {
+      value: "jobs-ASC",
+      label: "Most Jobs",
+      fn: (resource1: Resource, resource2: Resource) =>
+        resource2.jobs?.length - resource1.jobs?.length,
+    },
+    {
+      value: "jobs-DESC",
+      label: "Least Jobs",
+      fn: (resource1: Resource, resource2: Resource) =>
+        resource1.jobs?.length - resource2.jobs?.length,
+    },
+  ];
+  const [filterParams, setFilterParams] = useState({
+    search: null,
+    sort: "team-ASC",
+  });
   const queryClient = useQueryClient();
   const resourcesQuery = useQuery({
     queryKey: ["resources"],
@@ -59,8 +96,37 @@ const ResourcesDashboardPage = () => {
   const handleEdit = (resource: ResourceData): void => {
     updateMutation.mutate(resource);
   };
-  const labelStyleClass = "text-neutral-200";
+  const labelStyleClass = "text-neutral-200 p-2 uppercase text-sm ";
+  let filteredData = [...resourcesQuery.data];
+  if (filterParams.search) {
+    filteredData = resourcesQuery.data?.filter(
+      (resource) =>
+        resource.firstName.toLowerCase().includes(filterParams.search) ||
+        resource.lastName.toLowerCase().includes(filterParams.search)
+    );
+  }
+  filteredData = filteredData.sort(
+    sortOptions.find((opt) => opt.value === filterParams.sort)?.fn
+  );
 
+  const handleFilterChange = (event: any) => {
+    console.log(event.target.id);
+    console.log(event.target.value);
+    switch (event.target.id) {
+      case "sort":
+        setFilterParams((params) => ({
+          ...filterParams,
+          sort: event.target.value,
+        }));
+        break;
+      case "search":
+        setFilterParams((params) => ({
+          ...filterParams,
+          search: event.target.value.toLowerCase(),
+        }));
+        break;
+    }
+  };
   return (
     <div className="w-full">
       <PageTitle title={"Team Dashboard"} />
@@ -68,35 +134,28 @@ const ResourcesDashboardPage = () => {
         <div className="flex h-28 justify-around items-center">
           <div>
             <label className={labelStyleClass} htmlFor="">
-              Month Filter:{" "}
+              <FontAwesomeIcon icon={faFilter} />
             </label>
-            <select name="sort" id="">
-              <option value="">Jan</option>
-              <option value="">Feb</option>
-              <option value="">Mar</option>
-              <option value="">Apr</option>
-            </select>
+
+            <input onChange={handleFilterChange} name="search" id="search" />
           </div>
+
           <div>
-            <label className={labelStyleClass} htmlFor="">
-              Member Filter:{" "}
+            <label className={labelStyleClass} htmlFor="sort">
+              <FontAwesomeIcon className="rotate-90" icon={faRightLeft} /> Sort
+              :
             </label>
-            <select name="sort" id="">
-              <option value="">Jan</option>
-              <option value="">Feb</option>
-              <option value="">Mar</option>
-              <option value="">Apr</option>
-            </select>
-          </div>
-          <div>
-            <label className={labelStyleClass} htmlFor="">
-              Sort by:{" "}
-            </label>
-            <select name="sort" id="">
-              <option value="">Job A-Z</option>
-              <option value="">Job Z-A</option>
-              <option value="">Latest Jobs</option>
-              <option value="">Oldest Jobs</option>
+            <select
+              onChange={handleFilterChange}
+              defaultValue={filterParams.sort}
+              name="sort"
+              id="sort"
+            >
+              {sortOptions.map((opt, index) => (
+                <option key={index} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
             </select>
           </div>
         </div>
@@ -111,7 +170,7 @@ const ResourcesDashboardPage = () => {
           </div>{" "}
           {/*className="grid grid-cols-1 divide-y-2 gap-2"> */}
           {resourcesQuery.data &&
-            resourcesQuery.data.map((resource) => (
+            filteredData.map((resource) => (
               <ResourceCard
                 key={resource.id}
                 resource={resource}

@@ -18,12 +18,23 @@ export const getDatesInMonthCalendar = (year: number, month: number) => {
 export const getMaxDate = (jobs: Job[]): Date => {
   let maxDate = new Date(jobs[0].endDate);
   for (let i = 0; i < jobs.length; ++i) {
-    console.log(jobs[i].endDate, maxDate);
+    // console.log(jobs[i].endDate, maxDate);
     if (jobs[i].endDate.getTime() > maxDate.getTime()) {
       maxDate = new Date(jobs[i].endDate);
     }
   }
   return maxDate;
+};
+
+export const isBetween = (date: Date, date1: Date, date2: Date): boolean => {
+  date.setHours(0, 0, 0, 0);
+  date1.setHours(0, 0, 0, 0);
+  date2.setHours(0, 0, 0, 0);
+  console.log(date, date1, date2);
+  if (date1.getTime() <= date.getTime() && date2.getTime() >= date.getTime())
+    return true;
+
+  return false;
 };
 export const colors = [
   "#ef719b",
@@ -36,7 +47,7 @@ export const colors = [
 export const getMinDate = (jobs: Job[]): Date => {
   let minDate = new Date(jobs[0].endDate);
   for (let i = 0; i < jobs.length; ++i) {
-    console.log(jobs[i].startDate, minDate);
+    //console.log(jobs[i].startDate, minDate);
     if (jobs[i].startDate.getTime() < minDate.getTime()) {
       minDate = new Date(jobs[i].startDate);
     }
