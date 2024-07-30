@@ -16,7 +16,7 @@ function App() {
         <SideMenu />
         <div className="w-full  bg-gradient-to-b from-slate-900 to-sky-700 my-1">
           <Routes>
-            <Route path="/jobs" element={<JobsDashboardPage />} />
+            <Route path="/" element={<JobsDashboardPage />} />
             <Route path="/resources" element={<ResourcesDashboardPage />} />
             <Route path="/resources/:id" element={<ResourcePage />} />
             <Route path="/error/:msg" element={<ErrorPage />} />

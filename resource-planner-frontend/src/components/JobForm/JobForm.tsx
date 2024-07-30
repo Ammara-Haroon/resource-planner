@@ -6,7 +6,13 @@ import {
   getAvailableResources,
 } from "../../services/resource-sevices";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAngleDown,
+  faPlus,
+  faTimes,
+} from "@fortawesome/free-solid-svg-icons";
+import { faArrowDown } from "@fortawesome/free-solid-svg-icons/faArrowDown";
+import ProfilePic from "../../assets/profile_placeholder.jpg";
 
 const JobForm = ({ onSubmit }: { onSubmit: (newJob: Partial<Job>) => any }) => {
   const [resourceVal, setResourceVal] = useState("not assigned");
@@ -76,6 +82,7 @@ const JobForm = ({ onSubmit }: { onSubmit: (newJob: Partial<Job>) => any }) => {
     console.log(newJob);
     onSubmit(newJob);
   };
+  const [showOptions, setShowOptions] = useState(false);
   return (
     <form
       className="bg-slate-400 fixed bottom-0 border-4 border-slate-700 z-50 box-border mx-2"
@@ -91,14 +98,66 @@ const JobForm = ({ onSubmit }: { onSubmit: (newJob: Partial<Job>) => any }) => {
         <div>
           <Datepicker value={value} onChange={handleValueChange} />
         </div>
-        <select name="resource" defaultValue={-1}>
+        {/* <select name="resource" defaultValue={-1}>
           <option value={-1}>Not Assigned</option>
           {options.map((op: Resource) => (
             <option key={op.id} value={op.id}>
               {op.firstName} {op.lastName}
             </option>
           ))}
-        </select>
+        </select> */}
+        <div className="relative text-slate-900">
+          <div className="flex justify-center items-center">
+            <input
+              name="resource"
+              className="p-2 w-full bg-slate-100"
+              disabled
+              defaultValue="Not Assigned"
+            />
+            <FontAwesomeIcon
+              onClick={() => setShowOptions(!showOptions)}
+              className="bg-slate-100 py-3 cursor-pointer p-1"
+              icon={faAngleDown}
+            />
+          </div>
+          {showOptions && (
+            <div
+              className="absolute bottom-11 rounded-md bg-neutral-200 z-50 w-full border border-slate-500 "
+              onMouseLeave={() => setShowOptions(false)}
+            >
+              <div
+                onClick={() => {
+                  console.log("Not assigned");
+                }}
+                className="shadow-2xl flex items-center gap-1 hover:bg-slate-400 cursor-pointer"
+              >
+                <FontAwesomeIcon
+                  className="h-5 w-5 rounded-full "
+                  icon={faTimes}
+                />
+                <span>Not Assigned</span>
+              </div>
+              {options.map((op: Resource) => (
+                <div
+                  onClick={() => {
+                    setShowOptions(false);
+                    console.log(op.firstName);
+                  }}
+                  className="shadow-2xl flex items-center gap-1 hover:bg-slate-400 cursor-pointer"
+                >
+                  <img
+                    className="h-5 w-5 rounded-full "
+                    src={op.imageUrl || ProfilePic}
+                    alt={op.firstName}
+                  />
+                  <span>
+                    {op.firstName} {op.lastName}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
         <button type="submit">
           <FontAwesomeIcon icon={faPlus} />
         </button>

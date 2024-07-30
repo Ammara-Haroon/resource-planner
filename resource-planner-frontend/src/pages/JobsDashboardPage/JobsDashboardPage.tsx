@@ -4,28 +4,28 @@ import {
   getAllJobs,
   updateJob,
 } from "../../services/job-services";
-import Select from "react-select";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import JobsCard from "../../components/JobsCard/JobsCard";
 import JobForm from "../../components/JobForm/JobForm";
 import { Job, Resource } from "../../services/api-responses_interfaces";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import PageTitle from "../../components/PageTitle/PageTitle";
 import GanttChart from "../../components/GanttChart/GanttChart";
-import { SetStateAction, useState } from "react";
+import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faCalendarCheck,
   faFilter,
+  faFilterCircleXmark,
   faRightLeft,
+  faXmarkCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import Datepicker from "react-tailwindcss-datepicker";
 import { faCalendarPlus } from "@fortawesome/free-solid-svg-icons/faCalendarPlus";
-import { getMaxDate, getMinDate, isBetween } from "../../services/utils";
+import { isBetween } from "../../services/utils";
+import ComboBox, { IComboBoxOption } from "../../components/ComboBox/ComboBox";
 
 const JobsDashboardPage = () => {
-  const [defaultView, setDefaultView] = useState(true);
   const sortOptions = [
     {
       value: "JobName-ASC",
@@ -66,6 +66,7 @@ const JobsDashboardPage = () => {
         ),
     },
   ];
+  const [defaultView, setDefaultView] = useState(true);
   const queryClient = useQueryClient();
   const jobsQuery = useQuery({
     queryKey: ["jobs"],
@@ -92,7 +93,7 @@ const JobsDashboardPage = () => {
       startDate: null, //jobsQuery.data ? getMinDate(jobsQuery.data) : new Date(),
       endDate: null, //jobsQuery.data ? getMaxDate(jobsQuery.data) : new Date(),
     },
-    sort: "Jobs A-Z",
+    sort: "JobTime-ASC",
   });
 
   const deleteMutation = useMutation({
@@ -163,7 +164,7 @@ const JobsDashboardPage = () => {
       } else if (event.target.value === "All") {
         setFilterParams((params) => ({
           ...params,
-          resourceFilter: "",
+          resourceFilter: "All",
         }));
       } else {
         setFilterParams((params) => ({
@@ -181,7 +182,9 @@ const JobsDashboardPage = () => {
       let ans = true;
       if (filterParams.resourceFilter === null) {
         ans = job.resource === null;
-      } else if (filterParams.resourceFilter !== "") {
+      } else if (filterParams.resourceFilter === "All") {
+        ans = true;
+      } else {
         ans = Boolean(
           job.resource && job.resource.id == filterParams.resourceFilter
         );
@@ -191,6 +194,7 @@ const JobsDashboardPage = () => {
         filterParams.dateFilter.startDate === null &&
         filterParams.dateFilter.endDate === null
       ) {
+        console.log("should be here");
         return ans;
       }
 
@@ -215,10 +219,22 @@ const JobsDashboardPage = () => {
     .forEach((d) => console.log(d.startDate, d.startDate.getTime()));
 
   console.log(sortOptions.find((opt) => opt.value === filterParams.sort)?.fn);
+
+  const options = new Array<IComboBoxOption>();
+  options.push({ label: "All", icon: faFilterCircleXmark, value: "All" });
+  resources.forEach((res) =>
+    options.push({
+      label: `${res.firstName} ${res.lastName}`,
+      iconSrc: res.imageUrl,
+      value: res.id,
+    })
+  );
+  options.push({ label: "None", icon: faXmarkCircle, value: "None" });
+
   return (
     <div className="w-full">
       <PageTitle title={"Jobs Dashboard"} />
-      <div className="border border-t-0 flex w-full justify-end">
+      <div className="border-0 border-b-2 flex w-full justify-end">
         <button
           className="text-neutral-200 m-2 border px-2 py-1 uppercase hover:text-pink-500 hover:border-pink-500"
           onClick={() => setDefaultView(!defaultView)}
@@ -229,11 +245,25 @@ const JobsDashboardPage = () => {
       {defaultView ? (
         <div>
           <div className="flex h-28 justify-around items-center">
-            <div>
+            <div className="flex flex-col">
               <label className={labelStyleClass} htmlFor="team">
                 <FontAwesomeIcon icon={faFilter} /> Team Members:{" "}
               </label>
-              <select name="team" id="team" onChange={handleFilterChange}>
+              <ComboBox
+                defaultValue="All"
+                name="team"
+                id="team"
+                onSelect={handleFilterChange}
+                options={options}
+                opensUp={false}
+              />
+              {/* <select
+                className="h-8
+                rounded-md"
+                name="team"
+                id="team"
+                onChange={handleFilterChange}
+              >
                 <option value="All">All</option>
                 {resources.map((resource, index) => (
                   <option key={index} value={resource.id}>
@@ -241,9 +271,9 @@ const JobsDashboardPage = () => {
                   </option>
                 ))}
                 <option value="None">None</option>
-              </select>
+              </select> */}
             </div>
-            <div>
+            <div className="flex flex-col min-w-60">
               <label className={labelStyleClass} htmlFor="">
                 <FontAwesomeIcon icon={faCalendarPlus} /> Date Range :
               </label>
@@ -253,16 +283,17 @@ const JobsDashboardPage = () => {
                 value={filterParams.dateFilter}
               />
             </div>
-            <div>
+            <div className="flex flex-col">
               <label className={labelStyleClass} htmlFor="sort">
                 <FontAwesomeIcon className="rotate-90" icon={faRightLeft} />{" "}
-                Sort :
+                Sort By:
               </label>
               <select
                 onChange={handleFilterChange}
                 defaultValue={filterParams.sort}
                 name="sort"
                 id="sort"
+                className="rounded-md w-full h-8 px-1"
               >
                 {sortOptions.map((opt, index) => (
                   <option key={index} value={opt.value}>
