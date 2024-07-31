@@ -62,12 +62,18 @@ const JobsDashboardPage = () => {
     {
       value: "Team",
       label: "Team Members",
-      fn: (job1: Job, job2: Job) =>
-        job1.resource &&
-        job2.resource &&
-        `${job1.resource.firstName + job1.resource.lastName}`.localeCompare(
-          `${job2.resource.firstName + job2.resource.lastName}`
-        ),
+      fn: (job1: Job, job2: Job): number => {
+        if (!job1.resource) return 1;
+        if (!job2.resource) return -1;
+
+        return (
+          job1.resource &&
+          job2.resource &&
+          `${job1.resource.firstName + job1.resource.lastName}`.localeCompare(
+            `${job2.resource.firstName + job2.resource.lastName}`
+          )
+        );
+      },
     },
   ];
   const [defaultView, setDefaultView] = useState(true);
@@ -224,10 +230,6 @@ const JobsDashboardPage = () => {
     })
     .sort(sortOptions.find((opt) => opt.value === filterParams.sort)?.fn);
 
-  // filteredData
-  //   .sort(sortOptions.find((opt) => opt.value === filterParams.sort)?.fn)
-  //   .forEach((d) => console.log(d.startDate, d.startDate.getTime()));
-
   console.log(sortOptions.find((opt) => opt.value === filterParams.sort)?.fn);
 
   const options = new Array<IComboBoxOption>();
@@ -337,7 +339,7 @@ const JobsDashboardPage = () => {
           </div>
         </div>
       ) : (
-        <div className="max-w-full max-h-[calc(70vh)] overflow-scroll  border-4 border-pink-500">
+        <div className="max-w-full max-h-[calc(70vh)] overflow-scroll  border-4 border-slate-900">
           <GanttChart jobs={jobsQuery.data} />
         </div>
       )}

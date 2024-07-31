@@ -21,9 +21,7 @@ export const getAllResources = async (): Promise<Resource[]> => {
   return data;
 };
 
-export const createResource = async (
-  data: Partial<ResourceData>
-): Promise<Resource> => {
+export const createResource = async (data: ResourceData): Promise<Resource> => {
   const response = await axios.post(`${BACKEND_BASE_URL}/resources`, data, {
     headers: {
       "Content-Type": "multipart/form-data",
@@ -35,7 +33,9 @@ export const createResource = async (
 export const deleteResource = async (id: number): Promise<void> => {
   const response = await axios.delete(`${BACKEND_BASE_URL}/resources/${id}`);
 };
-export const updateResource = async (resource: ResourceData): Promise<void> => {
+export const updateResource = async (
+  resource: Required<ResourceData>
+): Promise<void> => {
   console.log(`${BACKEND_BASE_URL}/resources/${resource.id}`, resource);
   const response = await axios.patch(
     `${BACKEND_BASE_URL}/resources/${resource.id}`,
@@ -53,10 +53,10 @@ export const addResources = async () => {
     const response = await axios.get("https://randomuser.me/api/");
     const data = response.data.results[0];
     //console.log(data.picture.thumbnail);
-    const newResource: Partial<Resource> = {
+    const newResource: ResourceData = {
       firstName: data.name.first,
       lastName: data.name.last,
-      imageUrl: data.picture.thumbnail,
+      imageFile: null,
     };
     // console.log(newResource);
     createResource(newResource);

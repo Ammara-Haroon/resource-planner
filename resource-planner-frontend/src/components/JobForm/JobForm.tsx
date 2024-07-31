@@ -42,12 +42,12 @@ const JobForm = ({
   };
 
   const handleSubmit = (event: any): void => {
-    event.preventDefault();
+    //event.preventDefault();
     if (!dateRange || !dateRange.startDate || !dateRange.endDate) return;
     const newJob: Partial<JobData> = {
       name: jobNameRef.current?.value,
       startDate: new Date(dateRange.startDate),
-      endDate: new Date(dateRange.startDate),
+      endDate: new Date(dateRange.endDate),
       resource: selectedResource == "-1" ? null : parseInt(selectedResource),
     };
     onSubmit(newJob);
@@ -65,7 +65,7 @@ const JobForm = ({
 
   return (
     <form
-      className="bg-slate-400 fixed bottom-0 border-4 border-slate-700 z-50 box-border w-[calc(100%-256px)]"
+      className="bg-slate-400 fixed bottom-0 border-4 border-slate-700 z-5 box-border w-[calc(100%-256px)]"
       onSubmit={handleSubmit}
     >
       <div

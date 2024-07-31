@@ -6,6 +6,14 @@ export interface Job {
   resource: Partial<Resource> | null;
 }
 
+export interface JobData {
+  id?: number;
+  startDate: Date;
+  endDate: Date;
+  name: string;
+  resource: number | null;
+}
+
 export interface Resource {
   id: number;
   firstName: string;
@@ -15,16 +23,8 @@ export interface Resource {
 }
 
 export interface ResourceData {
-  id: number;
+  id?: number;
   firstName: string;
   lastName: string;
   imageFile: File | null;
-}
-
-export interface JobData {
-  id: number;
-  startDate: Date;
-  endDate: Date;
-  name: string;
-  resource: number | null;
 }

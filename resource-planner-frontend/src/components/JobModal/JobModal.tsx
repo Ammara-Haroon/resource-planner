@@ -13,6 +13,8 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { faTimesCircle } from "@fortawesome/free-regular-svg-icons";
+import ComboBox, { IComboBoxOption } from "../ComboBox/ComboBox";
+import { faX } from "@fortawesome/free-solid-svg-icons";
 
 interface IModalProps {
   job: Job;
@@ -20,58 +22,69 @@ interface IModalProps {
   onSubmit: (data: JobData) => any;
 }
 const JobModal = ({ job, onClose, onSubmit }: IModalProps) => {
-  const [options, setOptions] = useState<Resource[]>([]);
-  const [resourceId, setResourceId] = useState(
+  const [selectedResource, setSelectedResource] = useState(
     (job.resource && job.resource.id) || -1
   );
-  const formRef = useRef<HTMLFormElement | null>(null);
-  const [value, setValue] = useState<DateValueType>({
+  const jobNameRef = useRef<HTMLInputElement>(null);
+  const [dateRange, setDateRange] = useState<DateValueType>({
     startDate: job.startDate,
     endDate: job.endDate,
   });
-  console.log(job);
-  document.body.style.overflow = "hidden";
+  const [resources, setResources] = useState<Resource[]>([]);
 
   useEffect(() => {
-    if (value) {
-      getAvailableResources(value.startDate, value.endDate).then((data) => {
-        if (job.resource) {
-          data.push(job.resource);
-        }
-        setOptions(data);
+    if (dateRange && dateRange.startDate && dateRange.endDate) {
+      getAvailableResources(
+        new Date(dateRange.startDate),
+        new Date(dateRange.endDate)
+      ).then((data) => {
+        data.push();
+        setResources(data);
       });
     } else {
-      getAllResources().then((data) => setOptions(data));
+      getAllResources().then((data) => setResources(data));
     }
-  }, []);
+  }, [dateRange]);
 
-  const handleValueChange = (newValue: any) => {
-    newValue.startDate = new Date(newValue.startDate);
-    newValue.endDate = new Date(newValue.endDate);
-
-    console.log("newValue:", newValue);
-    setValue(newValue);
-    getAvailableResources(newValue.startDate, newValue.endDate).then((data) =>
-      setOptions(data)
-    );
+  const handleDateRangeChange = (newValue: DateValueType) => {
+    if (newValue && newValue.startDate && newValue.endDate) {
+      setDateRange(newValue);
+    } else {
+      setDateRange({ startDate: new Date(), endDate: new Date() });
+    }
   };
 
-  const handlSubmit = (event: any): void => {
+  const handleSubmit = (event: any): void => {
     //event.preventDefault();
-    const formData =
-      Object.fromEntries(new FormData(formRef.current).entries()) || null;
-    console.log(formData);
-    const editedJob: Job = { ...job, ...formData };
-    editedJob.startDate = value?.startDate;
-    editedJob.endDate = value?.endDate;
-    editedJob.resource = Number(formData.resource);
-    if (editedJob.resource === -1) editedJob.resource = null;
-    console.log(editedJob);
-    onSubmit(editedJob);
+    if (!dateRange || !dateRange.startDate || !dateRange.endDate) return;
+    const newJob: JobData = {
+      id: job.id,
+      name: jobNameRef.current?.value || "",
+      startDate: new Date(dateRange.startDate),
+      endDate: new Date(dateRange.endDate),
+      resource: selectedResource == -1 ? null : selectedResource,
+    };
+    onSubmit(newJob);
   };
-  const handleChange = (event: ChangeEvent<HTMLSelectElement>): void => {
-    setResourceId(event.target.value);
-  };
+
+  const options = new Array<IComboBoxOption>();
+  options.push({ label: "Not Assigned", icon: faX, value: -1 });
+  resources.forEach((res) =>
+    options.push({
+      label: `${res.firstName} ${res.lastName}`,
+      iconSrc: res.imageUrl,
+      value: res.id,
+    })
+  );
+  if (job.resource && job.resource.id) {
+    options.push({
+      label: `*${job.resource.firstName} ${job.resource.lastName}*`,
+      iconSrc: job.resource.imageUrl,
+      value: job.resource.id,
+    });
+  }
+
+  document.body.style.overflow = "hidden";
 
   const btnStyleClass =
     "border border-black px-4 py-1 w-15 bg-slate-800 text-neutral-200  hover:text-pink-600";
@@ -82,11 +95,10 @@ const JobModal = ({ job, onClose, onSubmit }: IModalProps) => {
     onClose();
   };
   return (
-    <div className="flex justify-center items-center fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity">
+    <div className="flex justify-center items-center fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity z-20">
       <form
-        onSubmit={handlSubmit}
+        onSubmit={handleSubmit}
         className="flex justify-center items-center"
-        ref={formRef}
       >
         <div className="bg-slate-200 p-5 flex flex-col gap-10 justify-center items-center  border border-black border-dotted">
           <FontAwesomeIcon
@@ -107,16 +119,31 @@ const JobModal = ({ job, onClose, onSubmit }: IModalProps) => {
               defaultValue={job.name}
               name="name"
               id="name"
+              ref={jobNameRef}
               required
             ></input>
             <label className={labelStyleClass} htmlFor="name">
               Expected Timeline:
             </label>
-            <Datepicker value={value} onChange={handleValueChange} />
+            <Datepicker value={dateRange} onChange={handleDateRangeChange} />
             <label className={labelStyleClass} htmlFor="name">
               Assigned To:
             </label>
-            <select
+            <ComboBox
+              options={options}
+              defaultValue={
+                job.resource
+                  ? `${job.resource?.firstName} ${job.resource?.lastName}`
+                  : "Not Assigned"
+              }
+              name="resource"
+              id="resource"
+              opensUp={true}
+              onSelect={(event: any) => {
+                setSelectedResource(event.target.value);
+              }}
+            />
+            {/* <select
               className={inputStyleClass}
               onChange={handleChange}
               name="resource"
@@ -131,7 +158,7 @@ const JobModal = ({ job, onClose, onSubmit }: IModalProps) => {
                   {op.firstName} {op.lastName}
                 </option>
               ))}
-            </select>
+            </select> */}
           </div>
 
           <div className="flex justify-center items-center gap-2">

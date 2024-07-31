@@ -46,7 +46,7 @@ const ResourceForm = ({
 
   return (
     <form
-      className="bg-slate-400 fixed bottom-0 border-4 border-slate-700 z-50 box-border w-[calc(100%-256px)]"
+      className="bg-slate-400 fixed bottom-0 border-4 border-slate-700 z-5 box-border w-[calc(100%-256px)]"
       ref={formRef}
       onSubmit={handleSubmit}
     >

@@ -27,8 +27,12 @@ const ResourcePage = () => {
     "Nov",
     "Dec",
   ];
-  const minYear = getMinDate(resource.jobs).getFullYear();
-  const maxYear = getMaxDate(resource.jobs).getFullYear();
+  const minYear = resource.jobs
+    ? getMinDate(resource.jobs).getFullYear()
+    : new Date().getFullYear();
+  const maxYear = resource.jobs
+    ? getMaxDate(resource.jobs).getFullYear()
+    : new Date().getFullYear();
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
   const [selectedYear, setSelectedYear] = useState(minYear);
   const years = new Array();

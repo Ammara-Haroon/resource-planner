@@ -9,7 +9,7 @@ export const getAllJobs = async (): Promise<Job[]> => {
   return cleanJobs(data);
 };
 
-export const createJob = async (data: Partial<JobData>): Promise<Job> => {
+export const createJob = async (data: JobData): Promise<Job> => {
   console.log(data);
 
   const response = await axios.post(`${BACKEND_BASE_URL}/jobs`, (data = data));
@@ -19,7 +19,7 @@ export const createJob = async (data: Partial<JobData>): Promise<Job> => {
 export const deleteJob = async (id: number): Promise<void> => {
   const response = await axios.delete(`${BACKEND_BASE_URL}/jobs/${id}`);
 };
-export const updateJob = async (job: JobData): Promise<void> => {
+export const updateJob = async (job: Required<JobData>): Promise<void> => {
   console.log(`${BACKEND_BASE_URL}/jobs/${job.id}`, job);
   const response = await axios.put(`${BACKEND_BASE_URL}/jobs/${job.id}`, job);
 };
@@ -35,7 +35,7 @@ export const addJobs = () => {
     const futureDate1 = new Date(currentDate);
     futureDate1.setDate(futureDate1.getDate() + 5 + i);
 
-    const newJob: Partial<Job> = {
+    const newJob: JobData = {
       startDate: futureDate2,
       endDate: futureDate1,
       name: "Job" + i,

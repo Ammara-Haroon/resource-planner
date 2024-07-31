@@ -1,3 +1,9 @@
+import { Job } from "./api-responses_interfaces";
+
+interface ITimeBound {
+  startDate: Date;
+  endDate: Date;
+}
 export const getDatesInMonthCalendar = (year: number, month: number) => {
   let date = new Date(year, month, 1, 0, 0, 0);
   let dates = [];
@@ -15,7 +21,7 @@ export const getDatesInMonthCalendar = (year: number, month: number) => {
   return dates;
 };
 
-export const getMaxDate = (jobs: Job[]): Date => {
+export const getMaxDate = (jobs: ITimeBound[]): Date => {
   let maxDate = new Date(jobs[0].endDate);
   for (let i = 0; i < jobs.length; ++i) {
     // console.log(jobs[i].endDate, maxDate);
@@ -44,7 +50,7 @@ export const colors = [
   "#55bedb",
   "#f7de20",
 ];
-export const getMinDate = (jobs: Job[]): Date => {
+export const getMinDate = (jobs: ITimeBound[]): Date => {
   let minDate = new Date(jobs[0].endDate);
   for (let i = 0; i < jobs.length; ++i) {
     //console.log(jobs[i].startDate, minDate);
