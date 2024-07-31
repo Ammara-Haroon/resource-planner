@@ -12,9 +12,12 @@ import GanttChartPage from "./components/GanttChart/GanttChart";
 function App() {
   return (
     <BrowserRouter>
-      <div className="flex flex-row font-mono min-h-screen">
+      <div
+        className="grid  font-mono min-h-screen max-w-screen "
+        style={{ gridTemplateColumns: "1fr 6fr" }}
+      >
         <SideMenu />
-        <div className="w-full  bg-gradient-to-b from-slate-900 to-sky-700 my-1">
+        <div className="max-w-full overflow-hidden w-full h-full bg-gradient-to-b from-slate-900 to-sky-700 my-1">
           <Routes>
             <Route path="/" element={<JobsDashboardPage />} />
             <Route path="/resources" element={<ResourcesDashboardPage />} />

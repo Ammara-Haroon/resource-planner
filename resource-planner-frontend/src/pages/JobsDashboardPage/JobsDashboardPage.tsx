@@ -7,7 +7,11 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import JobsCard from "../../components/JobsCard/JobsCard";
 import JobForm from "../../components/JobForm/JobForm";
-import { Job, Resource } from "../../services/api-responses_interfaces";
+import {
+  Job,
+  JobData,
+  Resource,
+} from "../../services/api-responses_interfaces";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 import { useNavigate } from "react-router-dom";
 import PageTitle from "../../components/PageTitle/PageTitle";
@@ -47,11 +51,11 @@ const JobsDashboardPage = () => {
       value: "JobTime-ASC",
       label: "Oldest Jobs",
       fn: (job1: Job, job2: Job) => {
-        console.log(
-          job1.startDate,
-          job2.startDate,
-          job1.startDate.getTime() - job2.startDate.getTime()
-        );
+        //  // console.log(
+        //     job1.startDate,
+        //     job2.startDate,
+        //     job1.startDate.getTime() - job2.startDate.getTime()
+        //   );
         return job1.startDate.getTime() - job2.startDate.getTime();
       },
     },
@@ -82,10 +86,16 @@ const JobsDashboardPage = () => {
   );
   //console.log(uniqueKeys);
 
-  let resources: Resource[] = uniqueKeys.map(
-    (key) =>
-      jobsQuery.data?.filter((job) => key === job.resource?.id)[0].resource
-  );
+  let resources: Resource[] = uniqueKeys
+    .map(
+      (key) =>
+        jobsQuery.data?.filter((job) => key === job.resource?.id)[0].resource
+    )
+    .sort((res1: Resource, res2: Resource) =>
+      `${res1.firstName} ${res1.lastName}`.localeCompare(
+        `${res2.firstName} ${res2.lastName}`
+      )
+    );
 
   const [filterParams, setFilterParams] = useState({
     resourceFilter: "All",
@@ -124,12 +134,12 @@ const JobsDashboardPage = () => {
     deleteMutation.mutate(id);
   };
 
-  const handleAdd = (newJob: Partial<Job>): void => {
+  const handleAdd = (newJob: Partial<JobData>): void => {
     console.log(newJob);
     addMutation.mutate(newJob);
   };
 
-  const handleEdit = (job: Job): void => {
+  const handleEdit = (job: JobData): void => {
     updateMutation.mutate(job);
   };
   const labelStyleClass = "text-neutral-200 p-2 uppercase text-sm ";
@@ -194,7 +204,7 @@ const JobsDashboardPage = () => {
         filterParams.dateFilter.startDate === null &&
         filterParams.dateFilter.endDate === null
       ) {
-        console.log("should be here");
+        //console.log("should be here");
         return ans;
       }
 
@@ -214,9 +224,9 @@ const JobsDashboardPage = () => {
     })
     .sort(sortOptions.find((opt) => opt.value === filterParams.sort)?.fn);
 
-  filteredData
-    .sort(sortOptions.find((opt) => opt.value === filterParams.sort)?.fn)
-    .forEach((d) => console.log(d.startDate, d.startDate.getTime()));
+  // filteredData
+  //   .sort(sortOptions.find((opt) => opt.value === filterParams.sort)?.fn)
+  //   .forEach((d) => console.log(d.startDate, d.startDate.getTime()));
 
   console.log(sortOptions.find((opt) => opt.value === filterParams.sort)?.fn);
 
@@ -231,12 +241,25 @@ const JobsDashboardPage = () => {
   );
   options.push({ label: "None", icon: faXmarkCircle, value: "None" });
 
+  const getResourceName = (id: string) => {
+    if (id === "All") return "All";
+
+    if (id === null) return "None";
+
+    const foundResource: Resource = resources.find(
+      (res: Resource) => res.id === parseInt(id)
+    );
+    if (foundResource)
+      return `${foundResource.firstName} ${foundResource.lastName}`;
+
+    return "";
+  };
   return (
-    <div className="w-full">
+    <div>
       <PageTitle title={"Jobs Dashboard"} />
       <div className="border-0 border-b-2 flex w-full justify-end">
         <button
-          className="text-neutral-200 m-2 border px-2 py-1 uppercase hover:text-pink-500 hover:border-pink-500"
+          className="text-neutral-200 m-2 border px-2 py-1 uppercase hover:text-pink-500 hover:border-pink-500 hover:shadow-pink-500 shadow-sm shadow-gray-500"
           onClick={() => setDefaultView(!defaultView)}
         >
           {defaultView ? "Gantt" : "Table"}
@@ -250,31 +273,16 @@ const JobsDashboardPage = () => {
                 <FontAwesomeIcon icon={faFilter} /> Team Members:{" "}
               </label>
               <ComboBox
-                defaultValue="All"
+                defaultValue={getResourceName(filterParams.resourceFilter)}
                 name="team"
                 id="team"
                 onSelect={handleFilterChange}
                 options={options}
                 opensUp={false}
               />
-              {/* <select
-                className="h-8
-                rounded-md"
-                name="team"
-                id="team"
-                onChange={handleFilterChange}
-              >
-                <option value="All">All</option>
-                {resources.map((resource, index) => (
-                  <option key={index} value={resource.id}>
-                    {resource.firstName} {resource.lastName}
-                  </option>
-                ))}
-                <option value="None">None</option>
-              </select> */}
             </div>
             <div className="flex flex-col min-w-60">
-              <label className={labelStyleClass} htmlFor="">
+              <label className={labelStyleClass}>
                 <FontAwesomeIcon icon={faCalendarPlus} /> Date Range :
               </label>
 
@@ -303,7 +311,7 @@ const JobsDashboardPage = () => {
               </select>
             </div>
           </div>
-          <div className="border-4 border-slate-900 m-2">
+          <div className="border-4 border-slate-900 bg-slate-50 m-2 min-h-[calc(65vh)]">
             <div
               className="p-2 border border-gray-100 grid grid-cols-4 gap-8 bg-slate-100 text-md font-semibold uppercase  text-center text-slate-800"
               style={{ gridTemplateColumns: "1fr 1fr 1fr 10px" }}
@@ -311,10 +319,9 @@ const JobsDashboardPage = () => {
               <p>Job</p>
               <p>Timeline</p>
               <p>Assigned To</p>
-            </div>{" "}
-            {/*className="grid grid-cols-1 divide-y-2 gap-2"> */}
-            {
-              //jobsQuery.data && jobsQuery.data
+            </div>
+            {jobsQuery.data &&
+              filteredData.length > 0 &&
               filteredData.map((job) => (
                 <JobsCard
                   key={job.id}
@@ -322,15 +329,18 @@ const JobsDashboardPage = () => {
                   onDelete={handleDelete}
                   onEdit={handleEdit}
                 />
-              ))
-            }
+              ))}
+            <div className="w-full h-20 text-center text-slate-700 text-sm">
+              {filteredData.length === 0 ? "0 Jobs Found" : ""}
+            </div>
+            <JobForm onSubmit={handleAdd} />
           </div>
-          <div className="w-full h-32"></div>
         </div>
       ) : (
-        <GanttChart jobs={jobsQuery.data} />
+        <div className="max-w-full max-h-[calc(70vh)] overflow-scroll  border-4 border-pink-500">
+          <GanttChart jobs={jobsQuery.data} />
+        </div>
       )}
-      {defaultView && <JobForm onSubmit={handleAdd} />}
     </div>
   );
 };

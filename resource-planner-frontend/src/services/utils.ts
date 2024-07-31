@@ -30,7 +30,7 @@ export const isBetween = (date: Date, date1: Date, date2: Date): boolean => {
   date.setHours(0, 0, 0, 0);
   date1.setHours(0, 0, 0, 0);
   date2.setHours(0, 0, 0, 0);
-  console.log(date, date1, date2);
+  //console.log(date, date1, date2);
   if (date1.getTime() <= date.getTime() && date2.getTime() >= date.getTime())
     return true;
 
@@ -53,4 +53,16 @@ export const getMinDate = (jobs: Job[]): Date => {
     }
   }
   return minDate;
+};
+
+export const getAllDatesBetween = (minDate: Date, maxDate: Date) => {
+  let dates: Date[] = [];
+  maxDate.setHours(0, 0, 0, 0);
+  minDate.setHours(0, 0, 0, 0);
+  const mills = maxDate.getTime();
+  while (minDate && minDate.getTime() <= mills) {
+    dates.push(new Date(minDate));
+    minDate.setDate(minDate.getDate() + 1);
+  }
+  return dates;
 };

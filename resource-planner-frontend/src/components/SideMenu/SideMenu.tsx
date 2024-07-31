@@ -7,7 +7,7 @@ const SideMenu = () => {
   const activeLinkStyle = `${linkStyle} border border-slate-700`;
 
   return (
-    <div className="border border-black flex flex-col justify-start m-1 text-sky-500 bg-gradient-to-b from-slate-900 to-sky-700">
+    <div className="border border-black flex flex-col justify-start m-1 text-sky-500 bg-gradient-to-b from-slate-900 to-sky-700 min-h-screen w-56">
       <NavLink
         to="/"
         className={({ isActive, isPending }) =>

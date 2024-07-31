@@ -1,165 +1,100 @@
-import React, { ChangeEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Datepicker, { DateValueType } from "react-tailwindcss-datepicker";
-import { Job, Resource } from "../../services/api-responses_interfaces";
+import { JobData, Resource } from "../../services/api-responses_interfaces";
 import {
   getAllResources,
   getAvailableResources,
 } from "../../services/resource-sevices";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faAngleDown,
-  faPlus,
-  faTimes,
-} from "@fortawesome/free-solid-svg-icons";
-import { faArrowDown } from "@fortawesome/free-solid-svg-icons/faArrowDown";
-import ProfilePic from "../../assets/profile_placeholder.jpg";
+import { faPlus, faX } from "@fortawesome/free-solid-svg-icons";
+import ComboBox, { IComboBoxOption } from "../ComboBox/ComboBox";
 
-const JobForm = ({ onSubmit }: { onSubmit: (newJob: Partial<Job>) => any }) => {
-  const [resourceVal, setResourceVal] = useState("not assigned");
-  const [value, setValue] = useState<DateValueType>({
+const JobForm = ({
+  onSubmit,
+}: {
+  onSubmit: (newJob: Partial<JobData>) => any;
+}) => {
+  const [selectedResource, setSelectedResource] = useState("Not Assigned");
+  const jobNameRef = useRef<HTMLInputElement>(null);
+  const [dateRange, setDateRange] = useState<DateValueType>({
     startDate: new Date(),
     endDate: new Date(),
   });
-  const [options, setOptions] = useState<Resource[]>([]);
-  useEffect(() => {
-    if (value) {
-      getAvailableResources(value.startDate, value.endDate).then((data) =>
-        setOptions(data)
-      );
-    } else {
-      getAllResources().then((data) => setOptions(data));
-    }
-  }, []);
-  const handleValueChange = (newValue: any) => {
-    newValue.startDate = new Date(newValue.startDate);
-    newValue.endDate = new Date(newValue.endDate);
+  const [resources, setResources] = useState<Resource[]>([]);
 
-    console.log("newValue:", newValue);
-    setValue(newValue);
-    getAvailableResources(newValue.startDate, newValue.endDate).then((data) =>
-      setOptions(data)
-    );
-  };
-  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    console.log(event.target.value);
-    const strIn = event.target.value;
-    if (
-      options.some((option) => {
-        const fullName = `${option.firstName} ${option.lastName}`;
-        console.log(
-          fullName.substring(0, strIn.length),
-          strIn.localeCompare(fullName.substring(0, strIn.length)) === 0
-        );
-        return (
-          strIn
-            .toLowerCase()
-            .localeCompare(
-              fullName.substring(0, strIn.length).toLowerCase()
-            ) === 0
-        );
-      })
-    ) {
-      console.log("great");
-      setResourceVal(strIn);
+  useEffect(() => {
+    if (dateRange && dateRange.startDate && dateRange.endDate) {
+      getAvailableResources(
+        new Date(dateRange.startDate),
+        new Date(dateRange.endDate)
+      ).then((data) => setResources(data));
+    } else {
+      getAllResources().then((data) => setResources(data));
+    }
+  }, [dateRange]);
+
+  const handleDateRangeChange = (newValue: DateValueType) => {
+    if (newValue && newValue.startDate && newValue.endDate) {
+      setDateRange(newValue);
+    } else {
+      setDateRange({ startDate: new Date(), endDate: new Date() });
     }
   };
-  const formRef = useRef<HTMLFormElement | null>(null);
 
   const handleSubmit = (event: any): void => {
-    //event.preventDefault();
-    const formData =
-      Object.fromEntries(
-        new FormData(formRef.current || undefined).entries()
-      ) || null;
-    const newJob: Partial<Job> = formData;
-    newJob.startDate = value?.startDate;
-    newJob.endDate = value?.endDate;
-    if (formData.resource == -1) {
-      newJob.resource = null;
-    } else {
-      newJob.resource = parseInt(formData.resource);
-    }
-    console.log(newJob);
+    event.preventDefault();
+    if (!dateRange || !dateRange.startDate || !dateRange.endDate) return;
+    const newJob: Partial<JobData> = {
+      name: jobNameRef.current?.value,
+      startDate: new Date(dateRange.startDate),
+      endDate: new Date(dateRange.startDate),
+      resource: selectedResource == "-1" ? null : parseInt(selectedResource),
+    };
     onSubmit(newJob);
   };
-  const [showOptions, setShowOptions] = useState(false);
+
+  const options = new Array<IComboBoxOption>();
+  options.push({ label: "Not Assigned", icon: faX, value: -1 });
+  resources.forEach((res) =>
+    options.push({
+      label: `${res.firstName} ${res.lastName}`,
+      iconSrc: res.imageUrl,
+      value: res.id,
+    })
+  );
+
   return (
     <form
-      className="bg-slate-400 fixed bottom-0 border-4 border-slate-700 z-50 box-border mx-2"
-      style={{ width: "calc(100% - 166px)" }}
-      ref={formRef}
+      className="bg-slate-400  sticky bottom-1  border-4 border-slate-700 z-50 box-border"
       onSubmit={handleSubmit}
     >
       <div
-        className="p-2 border border-gray-100 grid grid-cols-4 gap-8 hover:bg-slate-500"
+        className="p-2 border items-center border-gray-100 grid grid-cols-4 gap-4 hover:bg-slate-500"
         style={{ gridTemplateColumns: "1fr 1fr 1fr 45px" }}
       >
-        <input className="text-lg font-semibold" name="name" required></input>
-        <div>
-          <Datepicker value={value} onChange={handleValueChange} />
-        </div>
-        {/* <select name="resource" defaultValue={-1}>
-          <option value={-1}>Not Assigned</option>
-          {options.map((op: Resource) => (
-            <option key={op.id} value={op.id}>
-              {op.firstName} {op.lastName}
-            </option>
-          ))}
-        </select> */}
-        <div className="relative text-slate-900">
-          <div className="flex justify-center items-center">
-            <input
-              name="resource"
-              className="p-2 w-full bg-slate-100"
-              disabled
-              defaultValue="Not Assigned"
-            />
-            <FontAwesomeIcon
-              onClick={() => setShowOptions(!showOptions)}
-              className="bg-slate-100 py-3 cursor-pointer p-1"
-              icon={faAngleDown}
-            />
+        <input
+          className="text-slate-900 px-2 w-11/12 bg-slate-100 h-9 rounded-md"
+          name="name"
+          ref={jobNameRef}
+          required
+        ></input>
+        <div className="flex w-full justify-center">
+          <div className="w-11/12">
+            <Datepicker value={dateRange} onChange={handleDateRangeChange} />
           </div>
-          {showOptions && (
-            <div
-              className="absolute bottom-11 rounded-md bg-neutral-200 z-50 w-full border border-slate-500 "
-              onMouseLeave={() => setShowOptions(false)}
-            >
-              <div
-                onClick={() => {
-                  console.log("Not assigned");
-                }}
-                className="shadow-2xl flex items-center gap-1 hover:bg-slate-400 cursor-pointer"
-              >
-                <FontAwesomeIcon
-                  className="h-5 w-5 rounded-full "
-                  icon={faTimes}
-                />
-                <span>Not Assigned</span>
-              </div>
-              {options.map((op: Resource) => (
-                <div
-                  onClick={() => {
-                    setShowOptions(false);
-                    console.log(op.firstName);
-                  }}
-                  className="shadow-2xl flex items-center gap-1 hover:bg-slate-400 cursor-pointer"
-                >
-                  <img
-                    className="h-5 w-5 rounded-full "
-                    src={op.imageUrl || ProfilePic}
-                    alt={op.firstName}
-                  />
-                  <span>
-                    {op.firstName} {op.lastName}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
         </div>
+        <ComboBox
+          options={options}
+          defaultValue={selectedResource}
+          name="resource"
+          id="resource"
+          opensUp={true}
+          onSelect={(event: any) => {
+            setSelectedResource(event.target.value);
+          }}
+        />
         <button type="submit">
-          <FontAwesomeIcon icon={faPlus} />
+          <FontAwesomeIcon className="px-5 text-xl" icon={faPlus} />
         </button>
       </div>
     </form>

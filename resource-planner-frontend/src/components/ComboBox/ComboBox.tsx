@@ -41,15 +41,15 @@ const ComboBox = ({
         className="hover:cursor-pointer flex justify-center items-center rounded-md overflow-hidden  w-full h-9"
       >
         <input
+          //onClick={() => setShowOptions(!showOptions)}
           className="px-2 w-full bg-slate-100 h-9"
           name={name}
           id={id}
           disabled
           value={selectedValue}
-          defaultValue={defaultValue}
         />
         <FontAwesomeIcon
-          className="bg-slate-100 py-3 cursor-pointer p-1 "
+          className="bg-slate-100 py-3 p-1 "
           icon={faAngleDown}
         />
       </div>

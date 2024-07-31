@@ -7,10 +7,16 @@ export const getAllResources = async (): Promise<Resource[]> => {
   const response = await axios.get(`${BACKEND_BASE_URL}/resources`);
 
   let data = response.data;
-  data = data.map((entry: Resource) => ({
-    ...entry,
-    jobs: cleanJobs(entry.jobs),
-  }));
+  data = data
+    .map((entry: Resource) => ({
+      ...entry,
+      jobs: cleanJobs(entry.jobs),
+    }))
+    .sort((res1: Resource, res2: Resource) =>
+      `${res1.firstName} ${res1.lastName}`.localeCompare(
+        `${res2.firstName} ${res2.lastName}`
+      )
+    );
   console.log(data);
   return data;
 };
@@ -72,5 +78,15 @@ export const getAvailableResources = async (
     `${BACKEND_BASE_URL}/resources/options?startDate=${startDateStr}&endDate=${endDateStr}`
   );
   //console.log(response.data);
-  return response.data;
+  const data = response.data
+    .map((entry: Resource) => ({
+      ...entry,
+      jobs: cleanJobs(entry.jobs),
+    }))
+    .sort((res1: Resource, res2: Resource) =>
+      `${res1.firstName} ${res1.lastName}`.localeCompare(
+        `${res2.firstName} ${res2.lastName}`
+      )
+    );
+  return data;
 };

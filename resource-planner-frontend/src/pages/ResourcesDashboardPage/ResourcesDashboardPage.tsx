@@ -88,7 +88,7 @@ const ResourcesDashboardPage = () => {
     deleteMutation.mutate(id);
   };
 
-  const handleAdd = (newResource: FormData): void => {
+  const handleAdd = (newResource: Partial<ResourceData>): void => {
     console.log(newResource);
     addMutation.mutate(newResource);
   };
@@ -178,10 +178,12 @@ const ResourcesDashboardPage = () => {
                 onEdit={handleEdit}
               />
             ))}
+          <div className="w-full h-20 text-center text-slate-700 text-sm">
+            {filteredData.length === 0 ? "0 Jobs Found" : ""}
+          </div>
+          <ResourceForm onSubmit={handleAdd} />
         </div>
-        <div className="w-full h-32"></div>
       </div>
-      <ResourceForm onSubmit={handleAdd} />
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { BACKEND_BASE_URL } from "./api-config";
-import { Job } from "./api-responses_interfaces";
+import { Job, JobData } from "./api-responses_interfaces";
 
 export const getAllJobs = async (): Promise<Job[]> => {
   const response = await axios.get(`${BACKEND_BASE_URL}/jobs`);
@@ -9,7 +9,7 @@ export const getAllJobs = async (): Promise<Job[]> => {
   return cleanJobs(data);
 };
 
-export const createJob = async (data: Partial<Job>): Promise<Job> => {
+export const createJob = async (data: Partial<JobData>): Promise<Job> => {
   console.log(data);
 
   const response = await axios.post(`${BACKEND_BASE_URL}/jobs`, (data = data));
@@ -19,7 +19,7 @@ export const createJob = async (data: Partial<Job>): Promise<Job> => {
 export const deleteJob = async (id: number): Promise<void> => {
   const response = await axios.delete(`${BACKEND_BASE_URL}/jobs/${id}`);
 };
-export const updateJob = async (job: Job): Promise<void> => {
+export const updateJob = async (job: JobData): Promise<void> => {
   console.log(`${BACKEND_BASE_URL}/jobs/${job.id}`, job);
   const response = await axios.put(`${BACKEND_BASE_URL}/jobs/${job.id}`, job);
 };
