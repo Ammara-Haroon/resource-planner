@@ -1,5 +1,9 @@
 import React, { useState } from "react";
-import { Job, Resource } from "../../services/api-responses_interfaces";
+import {
+  Job,
+  Resource,
+  ResourceData,
+} from "../../services/api-responses_interfaces";
 import { getAvailableResources } from "../../services/resource-sevices";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
@@ -13,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 interface IResourceCardProps {
   resource: Resource;
   onDelete: (id: number) => any;
-  onEdit: (resource: Resource) => any;
+  onEdit: (resource: ResourceData) => any;
 }
 
 const ResourceCard = ({ resource, onDelete, onEdit }: IResourceCardProps) => {

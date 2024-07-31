@@ -46,8 +46,7 @@ const ResourceForm = ({
 
   return (
     <form
-      className="bg-slate-400 fixed bottom-0 border-4 border-slate-700 z-5 box-border mx-2"
-      style={{ width: "calc(100% - 166px)" }}
+      className="bg-slate-400 fixed bottom-0 border-4 border-slate-700 z-50 box-border w-[calc(100%-256px)]"
       ref={formRef}
       onSubmit={handleSubmit}
     >
@@ -56,13 +55,13 @@ const ResourceForm = ({
         style={{ gridTemplateColumns: "1fr 1fr 1fr 45px" }}
       >
         <input
-          className="text-lg font-semibold"
+          className="text-lg font-semibold px-1"
           name="firstName"
           placeholder="First Name"
           required
         ></input>
         <input
-          className="text-lg font-semibold"
+          className="text-lg font-semibold  px-1"
           name="lastName"
           placeholder="Last Name"
           required

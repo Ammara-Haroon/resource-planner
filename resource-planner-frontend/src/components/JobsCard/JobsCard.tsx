@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Job } from "../../services/api-responses_interfaces";
+import { Job, JobData } from "../../services/api-responses_interfaces";
 import { getAvailableResources } from "../../services/resource-sevices";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
@@ -10,7 +10,7 @@ import Profile_Pic from "../../assets/profile_placeholder.jpg";
 interface IJobsCardProps {
   job: Job;
   onDelete: (id: number) => any;
-  onEdit: (job: Job) => any;
+  onEdit: (job: JobData) => any;
 }
 const JobsCard = ({ job, onDelete, onEdit }: IJobsCardProps) => {
   //console.log(job);

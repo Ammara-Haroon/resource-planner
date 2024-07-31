@@ -21,7 +21,9 @@ export const getAllResources = async (): Promise<Resource[]> => {
   return data;
 };
 
-export const createResource = async (data: FormData): Promise<Resource> => {
+export const createResource = async (
+  data: Partial<ResourceData>
+): Promise<Resource> => {
   const response = await axios.post(`${BACKEND_BASE_URL}/resources`, data, {
     headers: {
       "Content-Type": "multipart/form-data",

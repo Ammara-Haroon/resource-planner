@@ -246,13 +246,13 @@ const JobsDashboardPage = () => {
 
     if (id === null) return "None";
 
-    const foundResource: Resource = resources.find(
+    const foundResource: Resource | undefined = resources.find(
       (res: Resource) => res.id === parseInt(id)
     );
-    if (foundResource)
-      return `${foundResource.firstName} ${foundResource.lastName}`;
 
-    return "";
+    if (!foundResource) return "";
+
+    return `${foundResource.firstName} ${foundResource.lastName}`;
   };
   return (
     <div>

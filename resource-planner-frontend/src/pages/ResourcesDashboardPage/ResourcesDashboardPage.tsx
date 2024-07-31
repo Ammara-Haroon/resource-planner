@@ -133,8 +133,9 @@ const ResourcesDashboardPage = () => {
       <div>
         <div className="flex h-28 justify-around items-center">
           <div>
-            <label className={labelStyleClass} htmlFor="">
+            <label className={labelStyleClass} htmlFor="search">
               <FontAwesomeIcon icon={faFilter} />
+              <span> Filter: </span>
             </label>
 
             <input onChange={handleFilterChange} name="search" id="search" />
@@ -159,7 +160,7 @@ const ResourcesDashboardPage = () => {
             </select>
           </div>
         </div>
-        <div className="border-4 border-slate-900 m-2">
+        <div className="border-4 bg-gray-100 border-slate-900 m-2">
           <div
             className="p-2 border border-gray-100 grid grid-cols-4 gap-8 bg-slate-100 text-md font-semibold uppercase  text-center text-slate-800"
             style={{ gridTemplateColumns: "1fr 1fr 1fr 45px" }}
@@ -167,8 +168,7 @@ const ResourcesDashboardPage = () => {
             <p>Team Member</p>
             <p>Assigned Jobs</p>
             <p>Availability</p>
-          </div>{" "}
-          {/*className="grid grid-cols-1 divide-y-2 gap-2"> */}
+          </div>
           {resourcesQuery.data &&
             filteredData.map((resource) => (
               <ResourceCard
@@ -178,8 +178,8 @@ const ResourcesDashboardPage = () => {
                 onEdit={handleEdit}
               />
             ))}
-          <div className="w-full h-20 text-center text-slate-700 text-sm">
-            {filteredData.length === 0 ? "0 Jobs Found" : ""}
+          <div className="w-full h-16 text-center text-slate-700 text-sm">
+            {filteredData.length === 0 ? "0 Resources Found" : ""}
           </div>
           <ResourceForm onSubmit={handleAdd} />
         </div>

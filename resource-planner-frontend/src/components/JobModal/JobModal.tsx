@@ -1,7 +1,11 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import JobForm from "../JobForm/JobForm";
 import Datepicker, { DateValueType } from "react-tailwindcss-datepicker";
-import { Job, Resource } from "../../services/api-responses_interfaces";
+import {
+  Job,
+  JobData,
+  Resource,
+} from "../../services/api-responses_interfaces";
 import {
   getAllResources,
   getAvailableResources,
@@ -13,7 +17,7 @@ import { faTimesCircle } from "@fortawesome/free-regular-svg-icons";
 interface IModalProps {
   job: Job;
   onClose: () => any;
-  onSubmit: (data: Job) => any;
+  onSubmit: (data: JobData) => any;
 }
 const JobModal = ({ job, onClose, onSubmit }: IModalProps) => {
   const [options, setOptions] = useState<Resource[]>([]);
