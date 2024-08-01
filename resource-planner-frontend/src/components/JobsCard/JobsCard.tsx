@@ -10,7 +10,7 @@ import Profile_Pic from "../../assets/profile_placeholder.jpg";
 interface IJobsCardProps {
   job: Job;
   onDelete: (id: number) => any;
-  onEdit: (job: JobData) => any;
+  onEdit: (job: Required<JobData>) => any;
 }
 const JobsCard = ({ job, onDelete, onEdit }: IJobsCardProps) => {
   //console.log(job);

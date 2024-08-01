@@ -1,27 +1,23 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
-  Job,
   Resource,
   ResourceData,
 } from "../../services/api-responses_interfaces";
-import { getAvailableResources } from "../../services/resource-sevices";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
-import Modal from "../JobModal/JobModal";
-import ProgressBar from "../ProgressBar/ProgressBar";
 import OptionsMenu from "../OptionsMenu/OptionsMenu";
 import Profile_Pic from "../../assets/profile_placeholder.jpg";
 import WeekView from "../WeekView/WeekView";
 import ProfileModal from "../ProfileModal/ProfileModal";
 import { useNavigate } from "react-router-dom";
+
 interface IResourceCardProps {
   resource: Resource;
   onDelete: (id: number) => any;
-  onEdit: (resource: ResourceData) => any;
+  onEdit: (resource: Required<ResourceData>) => any;
 }
 
 const ResourceCard = ({ resource, onDelete, onEdit }: IResourceCardProps) => {
-  //console.log(job);
   const [showModal, setShowModal] = useState(false);
   const [showOptionsMenu, setShowOptionsMenu] = useState(false);
   const navigate = useNavigate();
@@ -30,15 +26,19 @@ const ResourceCard = ({ resource, onDelete, onEdit }: IResourceCardProps) => {
     setShowOptionsMenu(false);
     setShowModal(true);
   };
+
   const handleClick = (): void => {
     setShowOptionsMenu(true);
   };
+
   const handleClose = (): void => {
     setShowOptionsMenu(false);
   };
+
   const handleCloseModal = (): void => {
     setShowModal(false);
   };
+
   const handleDelete = (): void => {
     setShowOptionsMenu(false);
     onDelete(resource.id);
@@ -49,6 +49,12 @@ const ResourceCard = ({ resource, onDelete, onEdit }: IResourceCardProps) => {
       state: { resourceData: resource },
     });
   };
+
+  const menuOptions = [
+    { label: "Edit", action: handleEdit },
+    { label: "Delete", action: handleDelete },
+    { label: "More", action: handleViewMore },
+  ];
 
   return (
     <>
@@ -85,14 +91,7 @@ const ResourceCard = ({ resource, onDelete, onEdit }: IResourceCardProps) => {
           />
 
           {showOptionsMenu && (
-            <OptionsMenu
-              options={[
-                { label: "Edit", action: handleEdit },
-                { label: "Delete", action: handleDelete },
-                { label: "More", action: handleViewMore },
-              ]}
-              onClose={handleClose}
-            />
+            <OptionsMenu options={menuOptions} onClose={handleClose} />
           )}
         </div>
       </div>

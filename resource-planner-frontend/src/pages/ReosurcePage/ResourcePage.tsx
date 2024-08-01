@@ -1,22 +1,15 @@
-import React, { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Resource } from "../../services/api-responses_interfaces";
 import ProfilePic from "../../assets/profile_placeholder.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faBackward,
-  faCalendar,
-  faCalendarAlt,
-  faFilter,
-} from "@fortawesome/free-solid-svg-icons";
+import { faBackward, faFilter } from "@fortawesome/free-solid-svg-icons";
 import MonthView from "../../components/MonthView/MonthView";
-import ErrorPage from "../ErrorPage/ErrorPage";
 import { colors, getMaxDate, getMinDate } from "../../services/utils";
 const ResourcePage = () => {
   const location = useLocation();
   const resource: Resource = location.state?.resourceData;
   const navigate = useNavigate();
-  console.log(resource);
   if (!resource) navigate("/error/Could not find the requested page.");
   const months = [
     "Jan",
@@ -33,9 +26,11 @@ const ResourcePage = () => {
     "Dec",
   ];
   const minYear: number =
-    getMinDate(resource.jobs)?.getFullYear() || new Date().getFullYear();
+    (resource.jobs && getMinDate(resource.jobs)?.getFullYear()) ||
+    new Date().getFullYear();
   const maxYear: number =
-    getMaxDate(resource.jobs)?.getFullYear() || new Date().getFullYear();
+    (resource.jobs && getMaxDate(resource.jobs)?.getFullYear()) ||
+    new Date().getFullYear();
 
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
@@ -44,15 +39,12 @@ const ResourcePage = () => {
   for (let i = minYear; i <= maxYear; ++i) {
     years.push(i);
   }
-  console.log(minYear);
 
   const handleYearChange = (event: ChangeEvent<HTMLSelectElement>): void => {
-    console.log("year", event.target.value);
     setSelectedYear(parseInt(event.target.value));
   };
 
   const handleMonthChange = (event: ChangeEvent<HTMLSelectElement>): void => {
-    console.log("month", event.target.value);
     setSelectedMonth(parseInt(event.target.value));
   };
 

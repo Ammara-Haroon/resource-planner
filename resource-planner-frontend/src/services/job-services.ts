@@ -17,11 +17,12 @@ export const createJob = async (data: JobData): Promise<Job> => {
 };
 
 export const deleteJob = async (id: number): Promise<void> => {
-  const response = await axios.delete(`${BACKEND_BASE_URL}/jobs/${id}`);
+  return await axios.delete(`${BACKEND_BASE_URL}/jobs/${id}`);
 };
-export const updateJob = async (job: Required<JobData>): Promise<void> => {
+export const updateJob = async (job: Required<JobData>): Promise<Job> => {
   console.log(`${BACKEND_BASE_URL}/jobs/${job.id}`, job);
   const response = await axios.put(`${BACKEND_BASE_URL}/jobs/${job.id}`, job);
+  return response.data;
 };
 
 export const addJobs = () => {
@@ -46,6 +47,7 @@ export const addJobs = () => {
   }
 };
 
+// convert date strings to date object
 export const cleanJobs = (data: any): Job[] => {
   return data.map((entry: any) => ({
     ...entry,

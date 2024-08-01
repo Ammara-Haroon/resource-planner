@@ -1,48 +1,44 @@
-import React from "react";
-import { useEffect, useRef, useState } from "react";
-import JobForm from "../JobForm/JobForm";
-import Datepicker, { DateValueType } from "react-tailwindcss-datepicker";
+import { FormEvent, useRef, useState } from "react";
 import {
-  Job,
   Resource,
   ResourceData,
 } from "../../services/api-responses_interfaces";
-import { getAvailableResources } from "../../services/resource-sevices";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCross, faPen, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faPen } from "@fortawesome/free-solid-svg-icons";
 import ProfilePic from "../../assets/profile_placeholder.jpg";
 import { faTimesCircle } from "@fortawesome/free-regular-svg-icons";
 import PhotoModal from "../PhotoModal/PhotoModal";
+
 interface IProfileModalProps {
   resource: Resource;
   onClose: () => any;
-  onSubmit: (data: ResourceData) => any;
+  onSubmit: (data: Required<ResourceData>) => any;
 }
 
 const ProfileModal = ({ resource, onClose, onSubmit }: IProfileModalProps) => {
   document.body.style.overflow = "hidden";
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [showPhotoModal, setShowPhotoModal] = useState(false);
-  const formRef = useRef<HTMLFormElement | null>(null);
+  //const formRef = useRef<HTMLFormElement>(null);
   const [imageUrl, setImageUrl] = useState<string>(
     resource.imageUrl || ProfilePic
   );
-  const handleSubmit = (event: any): void => {
-    //event.preventDefault();
-    const formData = new FormData(formRef.current);
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
+    let formData = new FormData(event.currentTarget);
     if (
       (resource.imageUrl || imageUrl !== ProfilePic) &&
       imageUrl !== resource.imageUrl
     ) {
       formData.append("imageFile", selectedFile || new File([], "tmp"));
-      console.log(formData);
     }
-    const editedProfile: ResourceData = {
-      id: resource.id,
+    const editedProfile: Required<ResourceData> = {
+      firstName: "",
+      lastName: "",
       ...Object.fromEntries(formData.entries()),
+      id: resource.id,
+      imageFile: null,
     };
-
-    console.log(editedProfile);
     onSubmit(editedProfile);
   };
 
@@ -68,6 +64,7 @@ const ProfileModal = ({ resource, onClose, onSubmit }: IProfileModalProps) => {
     }
     setShowPhotoModal(false);
   };
+
   return showPhotoModal ? (
     <PhotoModal
       photoURL={resource.imageUrl}
@@ -100,7 +97,6 @@ const ProfileModal = ({ resource, onClose, onSubmit }: IProfileModalProps) => {
         <form
           onSubmit={handleSubmit}
           className="flex justify-center items-center flex-col"
-          ref={formRef}
         >
           <div
             className="grid grid-cols-2 gap-5"

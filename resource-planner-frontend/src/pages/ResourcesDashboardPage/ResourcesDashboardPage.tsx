@@ -40,19 +40,20 @@ const ResourcesDashboardPage = () => {
       value: "jobs-ASC",
       label: "Most Jobs",
       fn: (resource1: Resource, resource2: Resource) =>
-        resource2.jobs?.length - resource1.jobs?.length,
+        (resource2.jobs?.length || 0) - (resource1.jobs?.length || 0),
     },
     {
       value: "jobs-DESC",
       label: "Least Jobs",
       fn: (resource1: Resource, resource2: Resource) =>
-        resource1.jobs?.length - resource2.jobs?.length,
+        (resource1.jobs?.length || 0) - (resource2.jobs?.length || 0),
     },
   ];
   const [filterParams, setFilterParams] = useState({
     search: null,
     sort: "team-ASC",
   });
+  const labelStyleClass = "text-neutral-200 p-2 uppercase text-sm ";
   const queryClient = useQueryClient();
   const resourcesQuery = useQuery({
     queryKey: ["resources"],
@@ -84,44 +85,47 @@ const ResourcesDashboardPage = () => {
     navigate(`/error/${resourcesQuery.error.message}`);
 
   const handleDelete = (id: number): void => {
-    //console.log("deletetetetet");
     deleteMutation.mutate(id);
   };
 
-  const handleAdd = (newResource: Partial<ResourceData>): void => {
-    console.log(newResource);
+  const handleAdd = (newResource: ResourceData): void => {
     addMutation.mutate(newResource);
   };
 
-  const handleEdit = (resource: ResourceData): void => {
+  const handleEdit = (resource: Required<ResourceData>): void => {
     updateMutation.mutate(resource);
   };
-  const labelStyleClass = "text-neutral-200 p-2 uppercase text-sm ";
-  let filteredData = [...resourcesQuery.data];
-  if (filterParams.search) {
-    filteredData = resourcesQuery.data?.filter(
-      (resource) =>
-        resource.firstName.toLowerCase().includes(filterParams.search) ||
-        resource.lastName.toLowerCase().includes(filterParams.search)
-    );
-  }
+
+  let filteredData: Resource[] = resourcesQuery.data
+    ? [...resourcesQuery.data]
+    : [];
+
+  filteredData =
+    filterParams.search && resourcesQuery.data
+      ? resourcesQuery.data.filter(
+          (resource) =>
+            resource.firstName
+              .toLowerCase()
+              .includes(filterParams.search || "") ||
+            resource.lastName.toLowerCase().includes(filterParams.search || "")
+        )
+      : [];
+
   filteredData = filteredData.sort(
     sortOptions.find((opt) => opt.value === filterParams.sort)?.fn
   );
 
   const handleFilterChange = (event: any) => {
-    console.log(event.target.id);
-    console.log(event.target.value);
     switch (event.target.id) {
       case "sort":
         setFilterParams((params) => ({
-          ...filterParams,
+          ...params,
           sort: event.target.value,
         }));
         break;
       case "search":
         setFilterParams((params) => ({
-          ...filterParams,
+          ...params,
           search: event.target.value.toLowerCase(),
         }));
         break;

@@ -12,6 +12,7 @@ import {
   JobData,
   Resource,
   ResourceBase,
+  ResourceResponseBase,
 } from "../../services/api-responses_interfaces";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 import { useNavigate } from "react-router-dom";
@@ -34,7 +35,7 @@ import ComboBox, { IComboBoxOption } from "../../components/ComboBox/ComboBox";
 import ToggleButton from "../../components/ToggleButton/ToggleButton";
 
 interface IFilterParams {
-  resourceFilter: string;
+  resourceFilter: string | null;
   dateFilter: ITimeBound | null;
   sort: string;
 }
@@ -79,38 +80,23 @@ const JobsDashboardPage = () => {
       },
     },
   ];
+  const labelStyleClass = "text-neutral-200 p-2 uppercase text-sm ";
   const [defaultView, setDefaultView] = useState(true);
   const queryClient = useQueryClient();
-  const jobsQuery = useQuery({
-    queryKey: ["jobs"],
-    queryFn: getAllJobs,
-  });
-  let uniqueKeys = Array.from(
-    new Set(
-      jobsQuery.data
-        ?.map((job) => job.resource)
-        .filter((resource) => resource !== null)
-        .map((resource, index) => resource.id)
-    )
-  );
-  //console.log(uniqueKeys);
-
-  let resources: Required<ResourceBase>[] = uniqueKeys
-    .map(
-      (key) =>
-        jobsQuery.data?.filter((job) => key === job.resource?.id)[0].resource
-    )
-    .sort((res1: Resource, res2: Resource) =>
-      `${res1.firstName} ${res1.lastName}`.localeCompare(
-        `${res2.firstName} ${res2.lastName}`
-      )
-    );
   const initialParams: IFilterParams = {
     resourceFilter: "All",
     dateFilter: null,
     sort: "JobTime-ASC",
   };
   const [filterParams, setFilterParams] = useState(initialParams);
+  const navigate = useNavigate();
+  const jobsQuery = useQuery({
+    queryKey: ["jobs"],
+    queryFn: getAllJobs,
+  });
+
+  if (jobsQuery.isLoading) return <LoadingSpinner />;
+  if (jobsQuery.isError) navigate(`/error/${jobsQuery.error.message}`);
 
   const deleteMutation = useMutation({
     mutationFn: deleteJob,
@@ -118,12 +104,14 @@ const JobsDashboardPage = () => {
       queryClient.invalidateQueries({ queryKey: ["jobs"] });
     },
   });
+
   const updateMutation = useMutation({
     mutationFn: updateJob,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["jobs"] });
     },
   });
+
   const addMutation = useMutation({
     mutationFn: createJob,
     onSuccess: () => {
@@ -131,27 +119,44 @@ const JobsDashboardPage = () => {
     },
   });
 
-  const navigate = useNavigate();
-  if (jobsQuery.isLoading) return <LoadingSpinner />;
-  if (jobsQuery.isError) navigate(`/error/${jobsQuery.error.message}`);
+  const getUniqueResourcesList = (): Required<ResourceResponseBase>[] => {
+    if (!jobsQuery.data || jobsQuery.data.length === 0) return [];
+    let uniqueResources =
+      jobsQuery.data
+        .map((job: Job) => job.resource)
+        .filter((jobRes) => jobRes !== null) || [];
+
+    uniqueResources = uniqueResources
+      .filter(
+        (res, index) =>
+          uniqueResources.findIndex((r) => r.id === res.id) === index
+      )
+      .sort(
+        (
+          res1: Required<ResourceResponseBase>,
+          res2: Required<ResourceResponseBase>
+        ) =>
+          `${res1.firstName} ${res1.lastName}`.localeCompare(
+            `${res2.firstName} ${res2.lastName}`
+          )
+      );
+
+    return uniqueResources;
+  };
 
   const handleDelete = (id: number): void => {
-    //console.log("deletetetetet");
     deleteMutation.mutate(id);
   };
 
   const handleAdd = (newJob: JobData): void => {
-    console.log(newJob);
     addMutation.mutate(newJob);
   };
 
   const handleEdit = (job: Required<JobData>): void => {
     updateMutation.mutate(job);
   };
-  const labelStyleClass = "text-neutral-200 p-2 uppercase text-sm ";
-  console.log(filterParams);
+
   const handleFilterChange = (event: any) => {
-    console.log("eventtttttttttt", event);
     if (event.startDate && event.endDate) {
       setFilterParams((params) => ({
         ...params,
@@ -161,13 +166,11 @@ const JobsDashboardPage = () => {
         },
       }));
     } else if (event.startDate === null && event.endDate === null) {
-      console.log("nulllllllllllllll");
       setFilterParams((params) => ({
         ...params,
         dateFilter: null,
       }));
     } else if (event.target.id === "team") {
-      console.log(event.target.value);
       if (event.target.value === "None") {
         setFilterParams((params) => ({ ...params, resourceFilter: null }));
       } else if (event.target.value === "All") {
@@ -182,12 +185,12 @@ const JobsDashboardPage = () => {
         }));
       }
     } else if (event.target.id === "sort") {
-      console.log(event.target.value);
       setFilterParams((params) => ({ ...params, sort: event.target.value }));
     }
   };
+
   const filteredData = jobsQuery.data
-    .filter((job) => {
+    ?.filter((job) => {
       let ans = true;
       if (filterParams.resourceFilter === null) {
         ans = job.resource === null;
@@ -195,15 +198,11 @@ const JobsDashboardPage = () => {
         ans = true;
       } else {
         ans = Boolean(
-          job.resource && job.resource.id == filterParams.resourceFilter
+          job.resource &&
+            job.resource.id === parseInt(filterParams.resourceFilter)
         );
       }
-      console.log(ans);
-      if (filterParams.dateFilter === null) {
-        //console.log("should be here");
-        return ans;
-      }
-
+      if (filterParams.dateFilter === null) return ans;
       return (
         ans &&
         (isBetween(
@@ -220,8 +219,7 @@ const JobsDashboardPage = () => {
     })
     .sort(sortOptions.find((opt) => opt.value === filterParams.sort)?.fn);
 
-  console.log(sortOptions.find((opt) => opt.value === filterParams.sort)?.fn);
-
+  const resources: Required<ResourceResponseBase>[] = getUniqueResourcesList();
   const options = new Array<IComboBoxOption>();
   options.push({ label: "All", icon: faFilterCircleXmark, value: "All" });
   resources.forEach((res) =>
@@ -235,17 +233,16 @@ const JobsDashboardPage = () => {
 
   const getResourceName = (id: string) => {
     if (id === "All") return "All";
-
     if (id === null) return "None";
-
-    const foundResource: Resource | undefined = resources.find(
-      (res: Resource) => res.id === parseInt(id)
-    );
+    const foundResource: Required<ResourceResponseBase> | undefined =
+      resources.find(
+        (res: Required<ResourceResponseBase>) => res.id === parseInt(id)
+      );
 
     if (!foundResource) return "";
-
     return `${foundResource.firstName} ${foundResource.lastName}`;
   };
+
   return (
     <div>
       <PageTitle title={"Jobs Dashboard"} />
@@ -265,7 +262,11 @@ const JobsDashboardPage = () => {
                 <FontAwesomeIcon icon={faFilter} /> Team Members:{" "}
               </label>
               <ComboBox
-                defaultValue={getResourceName(filterParams.resourceFilter)}
+                defaultValue={
+                  filterParams.resourceFilter
+                    ? getResourceName(filterParams.resourceFilter)
+                    : "None"
+                }
                 name="team"
                 id="team"
                 onSelect={handleFilterChange}
@@ -313,6 +314,7 @@ const JobsDashboardPage = () => {
               <p>Assigned To</p>
             </div>
             {jobsQuery.data &&
+              filteredData &&
               filteredData.length > 0 &&
               filteredData.map((job) => (
                 <JobsCard
@@ -323,7 +325,7 @@ const JobsDashboardPage = () => {
                 />
               ))}
             <div className="w-full h-20 text-center text-slate-700 text-sm">
-              {filteredData.length === 0 ? "0 Jobs Found" : ""}
+              {filteredData && filteredData.length === 0 ? "0 Jobs Found" : ""}
             </div>
             <JobForm onSubmit={handleAdd} />
           </div>

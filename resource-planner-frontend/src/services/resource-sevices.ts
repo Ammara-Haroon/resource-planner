@@ -17,7 +17,6 @@ export const getAllResources = async (): Promise<Resource[]> => {
         `${res2.firstName} ${res2.lastName}`
       )
     );
-  console.log(data);
   return data;
 };
 
@@ -31,11 +30,11 @@ export const createResource = async (data: ResourceData): Promise<Resource> => {
 };
 
 export const deleteResource = async (id: number): Promise<void> => {
-  const response = await axios.delete(`${BACKEND_BASE_URL}/resources/${id}`);
+  return await axios.delete(`${BACKEND_BASE_URL}/resources/${id}`);
 };
 export const updateResource = async (
   resource: Required<ResourceData>
-): Promise<void> => {
+): Promise<Resource> => {
   console.log(`${BACKEND_BASE_URL}/resources/${resource.id}`, resource);
   const response = await axios.patch(
     `${BACKEND_BASE_URL}/resources/${resource.id}`,
@@ -46,6 +45,7 @@ export const updateResource = async (
       },
     }
   );
+  return response.data;
 };
 
 export const addResources = async () => {
@@ -75,11 +75,11 @@ export const getAvailableResources = async (
     startDate.getMonth() < 9 ? "0" : ""
   }${startDate.getMonth() + 1}-${endDate.getDate()}`;
 
-  //console.log(startDateStr);
   const response = await axios.get(
     `${BACKEND_BASE_URL}/resources/options?startDate=${startDateStr}&endDate=${endDateStr}`
   );
-  //console.log(response.data);
+
+  // sort and clean data
   const data = response.data
     .map((entry: Resource) => ({
       ...entry,

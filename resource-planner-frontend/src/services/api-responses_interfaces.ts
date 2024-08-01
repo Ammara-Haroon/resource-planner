@@ -5,7 +5,7 @@ export interface JobBase {
   name: string;
 }
 export interface Job extends Required<JobBase> {
-  resource: Required<ResourceBase> | null;
+  resource: Required<ResourceResponseBase> | null;
 }
 
 export interface JobData extends JobBase {

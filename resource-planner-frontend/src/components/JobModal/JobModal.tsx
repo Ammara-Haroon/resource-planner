@@ -19,7 +19,7 @@ import { faX } from "@fortawesome/free-solid-svg-icons";
 interface IModalProps {
   job: Job;
   onClose: () => any;
-  onSubmit: (data: JobData) => any;
+  onSubmit: (data: Required<JobData>) => any;
 }
 const JobModal = ({ job, onClose, onSubmit }: IModalProps) => {
   const [selectedResource, setSelectedResource] = useState(
@@ -57,7 +57,7 @@ const JobModal = ({ job, onClose, onSubmit }: IModalProps) => {
   const handleSubmit = (event: any): void => {
     //event.preventDefault();
     if (!dateRange || !dateRange.startDate || !dateRange.endDate) return;
-    const newJob: JobData = {
+    const newJob: Required<JobData> = {
       id: job.id,
       name: jobNameRef.current?.value || "",
       startDate: new Date(dateRange.startDate),

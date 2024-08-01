@@ -9,11 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faX } from "@fortawesome/free-solid-svg-icons";
 import ComboBox, { IComboBoxOption } from "../ComboBox/ComboBox";
 
-const JobForm = ({
-  onSubmit,
-}: {
-  onSubmit: (newJob: Partial<JobData>) => any;
-}) => {
+const JobForm = ({ onSubmit }: { onSubmit: (newJob: JobData) => any }) => {
   const [selectedResource, setSelectedResource] = useState("Not Assigned");
   const jobNameRef = useRef<HTMLInputElement>(null);
   const [dateRange, setDateRange] = useState<DateValueType>({
@@ -44,8 +40,8 @@ const JobForm = ({
   const handleSubmit = (event: any): void => {
     //event.preventDefault();
     if (!dateRange || !dateRange.startDate || !dateRange.endDate) return;
-    const newJob: Partial<JobData> = {
-      name: jobNameRef.current?.value,
+    const newJob: JobData = {
+      name: jobNameRef.current?.value || "",
       startDate: new Date(dateRange.startDate),
       endDate: new Date(dateRange.endDate),
       resource: selectedResource == "-1" ? null : parseInt(selectedResource),
