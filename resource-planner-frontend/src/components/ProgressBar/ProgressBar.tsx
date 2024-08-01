@@ -29,10 +29,10 @@ const ProgressBar = ({ startDate, endDate }: IProgressBarProps) => {
           {endDate.getFullYear() % 1000}
         </small>
       </div>
-      <div className="border rounded-sm border-neutral-400 w-full h-4 bg-neutral-300">
+      <div className="border rounded-md border-neutral-400 w-full h-4 bg-neutral-300">
         {progress !== 0 && (
           <div
-            className="border rounded-sm w-full h-full bg-pink-400"
+            className="border rounded-md w-full h-full bg-pink-400"
             style={{ width: `${progress}%` }}
           ></div>
         )}

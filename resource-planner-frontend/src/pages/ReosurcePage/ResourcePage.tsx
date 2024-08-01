@@ -82,7 +82,7 @@ const ResourcePage = () => {
           {resource.firstName} {resource.lastName}
         </h1>
       </div>
-      <div className="border-2 shadow-lg border-pink-500 min-h-[calc(100vh-300px)] m-2 p-2 rounded-lg">
+      <div className="border-2 shadow-lg  border-pink-500 min-h-[calc(100vh-300px)] m-2 p-2 rounded-lg">
         <div
           className="grid-cols-2 grid box-border rounded-md border-pink-500"
           style={{ gridTemplateColumns: "1fr 1fr" }}
@@ -91,7 +91,7 @@ const ResourcePage = () => {
             className="grid-cols-2 grid  m-1 py-1 pb-4 border-4  border-dashed  box-border border-pink-500 shadow-lg bg-neutral-100"
             //style={{ gridTemplateColumns: "1fr 1fr" }}
           >
-            <p className="border-b font-bold text-slate-700 p-1 uppercase text-left">
+            <p className="border-b font-bold text-slate-700 p-1 uppercase text-center">
               Timeline
             </p>
             <p className="p-1 uppercase text-center w-full border-b font-bold text-slate-700">

@@ -20,15 +20,18 @@ import GanttChart from "../../components/GanttChart/GanttChart";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faChartGantt,
   faFilter,
   faFilterCircleXmark,
   faRightLeft,
+  faTableCells,
   faXmarkCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import Datepicker from "react-tailwindcss-datepicker";
 import { faCalendarPlus } from "@fortawesome/free-solid-svg-icons/faCalendarPlus";
 import { isBetween, ITimeBound } from "../../services/utils";
 import ComboBox, { IComboBoxOption } from "../../components/ComboBox/ComboBox";
+import ToggleButton from "../../components/ToggleButton/ToggleButton";
 
 interface IFilterParams {
   resourceFilter: string;
@@ -247,12 +250,12 @@ const JobsDashboardPage = () => {
     <div>
       <PageTitle title={"Jobs Dashboard"} />
       <div className="border-0 border-b-2 flex w-full justify-end">
-        <button
-          className="text-neutral-200 m-2 border px-2 py-1 uppercase hover:text-pink-500 hover:border-pink-500 hover:shadow-pink-500 shadow-sm shadow-gray-500"
-          onClick={() => setDefaultView(!defaultView)}
-        >
-          {defaultView ? "Gantt" : "Table"}
-        </button>
+        <ToggleButton
+          onSwitch={() => setDefaultView(!defaultView)}
+          values={["Gantt", "Table"]}
+          icons={[faChartGantt, faTableCells]}
+          defaultValue={0}
+        />
       </div>
       {defaultView ? (
         <div>
