@@ -11,6 +11,7 @@ import {
   Job,
   JobData,
   Resource,
+  ResourceBase,
 } from "../../services/api-responses_interfaces";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 import { useNavigate } from "react-router-dom";
@@ -26,9 +27,14 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Datepicker from "react-tailwindcss-datepicker";
 import { faCalendarPlus } from "@fortawesome/free-solid-svg-icons/faCalendarPlus";
-import { isBetween } from "../../services/utils";
+import { isBetween, ITimeBound } from "../../services/utils";
 import ComboBox, { IComboBoxOption } from "../../components/ComboBox/ComboBox";
 
+interface IFilterParams {
+  resourceFilter: string;
+  dateFilter: ITimeBound | null;
+  sort: string;
+}
 const JobsDashboardPage = () => {
   const sortOptions = [
     {
@@ -50,14 +56,8 @@ const JobsDashboardPage = () => {
     {
       value: "JobTime-ASC",
       label: "Oldest Jobs",
-      fn: (job1: Job, job2: Job) => {
-        //  // console.log(
-        //     job1.startDate,
-        //     job2.startDate,
-        //     job1.startDate.getTime() - job2.startDate.getTime()
-        //   );
-        return job1.startDate.getTime() - job2.startDate.getTime();
-      },
+      fn: (job1: Job, job2: Job) =>
+        job1.startDate.getTime() - job2.startDate.getTime(),
     },
     {
       value: "Team",
@@ -92,7 +92,7 @@ const JobsDashboardPage = () => {
   );
   //console.log(uniqueKeys);
 
-  let resources: Resource[] = uniqueKeys
+  let resources: Required<ResourceBase>[] = uniqueKeys
     .map(
       (key) =>
         jobsQuery.data?.filter((job) => key === job.resource?.id)[0].resource
@@ -102,15 +102,12 @@ const JobsDashboardPage = () => {
         `${res2.firstName} ${res2.lastName}`
       )
     );
-
-  const [filterParams, setFilterParams] = useState({
+  const initialParams: IFilterParams = {
     resourceFilter: "All",
-    dateFilter: {
-      startDate: null, //jobsQuery.data ? getMinDate(jobsQuery.data) : new Date(),
-      endDate: null, //jobsQuery.data ? getMaxDate(jobsQuery.data) : new Date(),
-    },
+    dateFilter: null,
     sort: "JobTime-ASC",
-  });
+  };
+  const [filterParams, setFilterParams] = useState(initialParams);
 
   const deleteMutation = useMutation({
     mutationFn: deleteJob,
@@ -140,19 +137,15 @@ const JobsDashboardPage = () => {
     deleteMutation.mutate(id);
   };
 
-  const handleAdd = (newJob: Partial<JobData>): void => {
+  const handleAdd = (newJob: JobData): void => {
     console.log(newJob);
     addMutation.mutate(newJob);
   };
 
-  const handleEdit = (job: JobData): void => {
+  const handleEdit = (job: Required<JobData>): void => {
     updateMutation.mutate(job);
   };
   const labelStyleClass = "text-neutral-200 p-2 uppercase text-sm ";
-  // const [dateFilter, setDateFilter] = useState({
-  //   startDate: new Date(),
-  //   endDate: new Date().setMonth(11),
-  // });
   console.log(filterParams);
   const handleFilterChange = (event: any) => {
     console.log("eventtttttttttt", event);
@@ -168,10 +161,7 @@ const JobsDashboardPage = () => {
       console.log("nulllllllllllllll");
       setFilterParams((params) => ({
         ...params,
-        dateFilter: {
-          startDate: null,
-          endDate: null,
-        },
+        dateFilter: null,
       }));
     } else if (event.target.id === "team") {
       console.log(event.target.value);
@@ -206,10 +196,7 @@ const JobsDashboardPage = () => {
         );
       }
       console.log(ans);
-      if (
-        filterParams.dateFilter.startDate === null &&
-        filterParams.dateFilter.endDate === null
-      ) {
+      if (filterParams.dateFilter === null) {
         //console.log("should be here");
         return ans;
       }

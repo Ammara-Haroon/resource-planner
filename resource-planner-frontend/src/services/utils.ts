@@ -1,28 +1,30 @@
 import { Job } from "./api-responses_interfaces";
 
-interface ITimeBound {
+export interface ITimeBound {
   startDate: Date;
   endDate: Date;
 }
-export const getDatesInMonthCalendar = (year: number, month: number) => {
-  let date = new Date(year, month, 1, 0, 0, 0);
-  let dates = [];
-  let prevMonthDays = date.getDay() === 0 ? 6 : date.getDay() - 1;
-  date.setDate(date.getDate() - prevMonthDays);
-  for (let i = 0; i < prevMonthDays; ++i) {
-    dates.push(new Date(date));
-    date.setDate(date.getDate() + 1);
-  }
-  while (date.getMonth() === month) {
-    dates.push(new Date(date));
-    date.setDate(date.getDate() + 1);
-  }
+// export const getDatesInMonthCalendar = (year: number, month: number) => {
+//   let date = new Date(year, month, 1, 0, 0, 0);
+//   let dates = [];
+//   let prevMonthDays = date.getDay() === 0 ? 6 : date.getDay() - 1;
+//   date.setDate(date.getDate() - prevMonthDays);
+//   for (let i = 0; i < prevMonthDays; ++i) {
+//     dates.push(new Date(date));
+//     date.setDate(date.getDate() + 1);
+//   }
+//   while (date.getMonth() === month) {
+//     dates.push(new Date(date));
+//     date.setDate(date.getDate() + 1);
+//   }
 
-  return dates;
-};
+//   return dates;
+// };
 
-export const getMaxDate = (jobs: ITimeBound[]): Date => {
-  let maxDate = new Date(jobs[0].endDate);
+export const getMaxDate = (jobs: ITimeBound[] | null): Date | null => {
+  if (!jobs || jobs.length === 0) return null;
+
+  let maxDate: Date = new Date(jobs[0].endDate);
   for (let i = 0; i < jobs.length; ++i) {
     // console.log(jobs[i].endDate, maxDate);
     if (jobs[i].endDate.getTime() > maxDate.getTime()) {
@@ -50,7 +52,9 @@ export const colors = [
   "#55bedb",
   "#f7de20",
 ];
-export const getMinDate = (jobs: ITimeBound[]): Date => {
+export const getMinDate = (jobs: ITimeBound[] | null): Date | null => {
+  if (!jobs || jobs.length === 0) return null;
+
   let minDate = new Date(jobs[0].endDate);
   for (let i = 0; i < jobs.length; ++i) {
     //console.log(jobs[i].startDate, minDate);
@@ -71,4 +75,47 @@ export const getAllDatesBetween = (minDate: Date, maxDate: Date) => {
     minDate.setDate(minDate.getDate() + 1);
   }
   return dates;
+};
+
+export const getDatesInMonthCalendar = (year: number, month: number) => {
+  let date = new Date(year, month, 1, 0, 0, 0);
+  let dates = [];
+  let prevMonthDays = date.getDay() === 0 ? 6 : date.getDay() - 1;
+  date.setDate(date.getDate() - prevMonthDays);
+  for (let i = 0; i < prevMonthDays; ++i) {
+    dates.push(new Date(date));
+    date.setDate(date.getDate() + 1);
+  }
+  while (date.getMonth() === month) {
+    dates.push(new Date(date));
+    date.setDate(date.getDate() + 1);
+  }
+  return dates;
+};
+
+export const getBusyStatus = (dates: Date[], jobs: ITimeBound[]) => {
+  const status = new Array(dates.length).fill(-1);
+  if (!jobs) return status;
+
+  for (let i = 0; i < jobs.length; ++i) {
+    jobs[i].startDate.setHours(0, 0, 0, 0);
+    jobs[i].endDate.setHours(0, 0, 0, 0);
+
+    console.log(jobs[i].startDate, jobs[i].endDate);
+    console.log(dates);
+
+    let index = dates.findIndex((date: Date) => {
+      return date.getTime() === jobs[i].startDate.getTime();
+    });
+
+    if (index === -1) continue;
+    console.log(index, dates[index].getTime(), jobs[i].endDate.getTime());
+
+    while (dates[index].getTime() <= jobs[i].endDate.getTime()) {
+      status[index] = i;
+      index++;
+      if (index >= dates.length) break;
+    }
+  }
+  return status;
 };

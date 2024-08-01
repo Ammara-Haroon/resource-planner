@@ -1,30 +1,30 @@
-export interface Job {
-  id: number;
-  startDate: Date;
-  endDate: Date;
-  name: string;
-  resource: Partial<Resource> | null;
-}
-
-export interface JobData {
+export interface JobBase {
   id?: number;
   startDate: Date;
   endDate: Date;
   name: string;
+}
+export interface Job extends Required<JobBase> {
+  resource: Required<ResourceBase> | null;
+}
+
+export interface JobData extends JobBase {
   resource: number | null;
 }
 
-export interface Resource {
-  id: number;
-  firstName: string;
-  lastName: string;
-  imageUrl: string | null;
-  jobs: Partial<Job>[] | null;
-}
-
-export interface ResourceData {
+export interface ResourceBase {
   id?: number;
   firstName: string;
   lastName: string;
+}
+
+export interface ResourceResponseBase extends Required<ResourceBase> {
+  imageUrl: string | null;
+}
+export interface Resource extends Required<ResourceResponseBase> {
+  jobs: Required<JobBase>[] | null;
+}
+
+export interface ResourceData extends ResourceBase {
   imageFile: File | null;
 }
