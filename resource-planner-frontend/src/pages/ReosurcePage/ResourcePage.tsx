@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Resource } from "../../services/api-responses_interfaces";
+import { JobBase, Resource } from "../../services/api-responses_interfaces";
 import ProfilePic from "../../assets/profile_placeholder.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBackward, faFilter } from "@fortawesome/free-solid-svg-icons";
@@ -48,13 +48,18 @@ const ResourcePage = () => {
     setSelectedMonth(parseInt(event.target.value));
   };
 
-  const filteredJobs = resource.jobs?.filter(
-    (job) =>
-      (job.startDate?.getMonth() === selectedMonth &&
-        job.startDate?.getFullYear() === selectedYear) ||
-      (job.endDate?.getMonth() === selectedMonth &&
-        job.endDate?.getFullYear() === selectedYear)
-  );
+  const filteredJobs = resource.jobs
+    ?.filter(
+      (job: Required<JobBase>) =>
+        (job.startDate?.getMonth() === selectedMonth &&
+          job.startDate?.getFullYear() === selectedYear) ||
+        (job.endDate?.getMonth() === selectedMonth &&
+          job.endDate?.getFullYear() === selectedYear)
+    )
+    .sort(
+      (job1: Required<JobBase>, job2: Required<JobBase>) =>
+        job1.startDate.getTime() - job2.startDate.getTime()
+    );
 
   return (
     <div>
@@ -79,10 +84,7 @@ const ResourcePage = () => {
           className="grid-cols-2 grid box-border rounded-md border-pink-500"
           style={{ gridTemplateColumns: "1fr 1fr" }}
         >
-          <div
-            className="grid-cols-2 grid  m-1 py-1 pb-4 border-4  border-dashed  box-border border-pink-500 shadow-lg bg-neutral-100"
-            //style={{ gridTemplateColumns: "1fr 1fr" }}
-          >
+          <div className="grid grid-cols-2  m-1 py-1 pb-4 border-4  border-dashed  box-border border-pink-500 shadow-lg bg-neutral-100">
             <p className="border-b font-bold text-slate-700 p-1 uppercase text-center">
               Timeline
             </p>

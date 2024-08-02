@@ -21,11 +21,15 @@ export const getAllResources = async (): Promise<Resource[]> => {
 };
 
 export const createResource = async (data: ResourceData): Promise<Resource> => {
-  const response = await axios.post(`${BACKEND_BASE_URL}/resources`, data, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  const response = await axios.post(
+    `${BACKEND_BASE_URL}/resources`,
+    cleanResourceData(data),
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
   return response.data;
 };
 
@@ -35,10 +39,9 @@ export const deleteResource = async (id: number): Promise<void> => {
 export const updateResource = async (
   resource: Required<ResourceData>
 ): Promise<Resource> => {
-  console.log(`${BACKEND_BASE_URL}/resources/${resource.id}`, resource);
   const response = await axios.patch(
     `${BACKEND_BASE_URL}/resources/${resource.id}`,
-    resource,
+    cleanResourceData(resource),
     {
       headers: {
         "Content-Type": "multipart/form-data",
@@ -52,7 +55,6 @@ export const addResources = async () => {
   for (let i = 0; i < 5; ++i) {
     const response = await axios.get("https://randomuser.me/api/");
     const data = response.data.results[0];
-    //console.log(data.picture.thumbnail);
     const newResource: ResourceData = {
       firstName: data.name.first,
       lastName: data.name.last,
@@ -91,4 +93,18 @@ export const getAvailableResources = async (
       )
     );
   return data;
+};
+
+const toTitleCase = (str: string): string => {
+  if (str.length < 2) return str;
+  return `${str.substring(0, 1).toUpperCase()}${str
+    .substring(1)
+    .toLowerCase()}`;
+};
+const cleanResourceData = (data: ResourceData): ResourceData => {
+  return {
+    ...data,
+    firstName: toTitleCase(data.firstName.trim()),
+    lastName: toTitleCase(data.lastName.trim()),
+  };
 };

@@ -1,14 +1,5 @@
-import React, { ChangeEvent, useEffect, useRef, useState } from "react";
-import Datepicker, { DateValueType } from "react-tailwindcss-datepicker";
-import {
-  Job,
-  Resource,
-  ResourceData,
-} from "../../services/api-responses_interfaces";
-import {
-  getAllResources,
-  getAvailableResources,
-} from "../../services/resource-sevices";
+import React, { FormEvent, useRef, useState } from "react";
+import { ResourceData } from "../../services/api-responses_interfaces";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
@@ -19,28 +10,27 @@ const ResourceForm = ({
 }) => {
   const formRef = useRef<HTMLFormElement | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       setSelectedFile(file);
-      setPreview(URL.createObjectURL(file));
     } else {
       setSelectedFile(null);
     }
   };
-  const handleSubmit = (event: any): void => {
-    //event.preventDefault();
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
+    event.preventDefault();
     const formData = Object.fromEntries(
-      new FormData(formRef.current).entries()
+      new FormData((formRef.current && formRef.current) || undefined)
     );
-    //formData[imageFile] = selectedFile;
-    console.log(formData);
     const newResource: ResourceData = {
+      imageFile: null,
+      firstName: "",
+      lastName: "",
       ...formData,
     };
-    console.log(newResource);
     onSubmit(newResource);
   };
 
@@ -51,24 +41,28 @@ const ResourceForm = ({
       onSubmit={handleSubmit}
     >
       <div
-        className="p-2 border border-gray-100 grid grid-cols-4 gap-8 hover:bg-slate-500"
+        className="p-2 border border-red-700 grid  hover:bg-slate-500 items-center"
         style={{ gridTemplateColumns: "1fr 1fr 1fr 45px" }}
       >
         <input
-          className="text-lg font-semibold px-1"
+          className="text-slate-900 px-2 w-11/12 bg-slate-100 h-9 rounded-md"
           name="firstName"
           placeholder="First Name"
+          type="text"
+          pattern="[A-Za-z ]*[A-Za-z][A-Za-z ]*"
           required
         ></input>
         <input
-          className="text-lg font-semibold  px-1"
+          className="text-slate-900 px-2 w-11/12 bg-slate-100 h-9 rounded-md"
           name="lastName"
           placeholder="Last Name"
+          type="text"
+          pattern="[A-Za-z ]*[A-Za-z][A-Za-z ]*"
           required
         ></input>
         <input
           type="file"
-          className="text-lg font-semibold"
+          className="text-slate-900 p-1 w-11/12 bg-slate-100 h-9 rounded-md"
           name="imageFile"
           onChange={handleFileChange}
         ></input>

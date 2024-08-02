@@ -33,15 +33,15 @@ const ComboBox = ({
     opensUp ? "bottom-11" : "top-11"
   }`;
   const [selectedValue, setSelectedValue] = useState(defaultValue);
-  console.log(selectedValue);
+
   return (
     <div className="relative text-slate-900">
       <div
+        className="bg-transparent z-6 w-full h-full absolute hover:cursor-pointer"
         onClick={() => setShowOptions(!showOptions)}
-        className="hover:cursor-pointer flex justify-center items-center rounded-md overflow-hidden  w-full h-9"
-      >
+      ></div>
+      <div className="hover:cursor-pointer flex justify-center items-center rounded-md overflow-hidden  w-full h-9">
         <input
-          //onClick={() => setShowOptions(!showOptions)}
           className="px-2 w-full bg-slate-100 h-9"
           name={name}
           id={id}

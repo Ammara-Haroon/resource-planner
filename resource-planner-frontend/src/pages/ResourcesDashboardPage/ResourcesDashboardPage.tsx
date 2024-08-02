@@ -50,7 +50,7 @@ const ResourcesDashboardPage = () => {
     },
   ];
   const [filterParams, setFilterParams] = useState({
-    search: null,
+    search: "",
     sort: "team-ASC",
   });
   const labelStyleClass = "text-neutral-200 p-2 uppercase text-sm ";
@@ -64,17 +64,26 @@ const ResourcesDashboardPage = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["resources"] });
     },
+    onError: () => {
+      navigate("/error/Could not delete team member !");
+    },
   });
   const updateMutation = useMutation({
     mutationFn: updateResource,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["resources"] });
     },
+    onError: () => {
+      navigate("/error/Could not update team member !");
+    },
   });
   const addMutation = useMutation({
     mutationFn: createResource,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["resources"] });
+    },
+    onError: () => {
+      navigate("/error/Could not add team member !");
     },
   });
 
@@ -96,24 +105,19 @@ const ResourcesDashboardPage = () => {
     updateMutation.mutate(resource);
   };
 
-  let filteredData: Resource[] = resourcesQuery.data
-    ? [...resourcesQuery.data]
-    : [];
-
-  filteredData =
-    filterParams.search && resourcesQuery.data
-      ? resourcesQuery.data.filter(
-          (resource) =>
-            resource.firstName
-              .toLowerCase()
-              .includes(filterParams.search || "") ||
-            resource.lastName.toLowerCase().includes(filterParams.search || "")
-        )
-      : [];
-
-  filteredData = filteredData.sort(
-    sortOptions.find((opt) => opt.value === filterParams.sort)?.fn
-  );
+  const filteredData =
+    resourcesQuery.data
+      ?.filter(
+        (resource) =>
+          resource.firstName
+            .toLowerCase()
+            .includes(filterParams.search.toLowerCase()) ||
+          resource.lastName
+            .toLowerCase()
+            .includes(filterParams.search.toLowerCase())
+      )
+      .sort(sortOptions.find((opt) => opt.value === filterParams.sort)?.fn) ||
+    [];
 
   const handleFilterChange = (event: any) => {
     switch (event.target.id) {
@@ -141,8 +145,12 @@ const ResourcesDashboardPage = () => {
               <FontAwesomeIcon icon={faFilter} />
               <span> Filter: </span>
             </label>
-
-            <input onChange={handleFilterChange} name="search" id="search" />
+            <input
+              className="rounded-md h-8 px-1"
+              onChange={handleFilterChange}
+              name="search"
+              id="search"
+            />
           </div>
 
           <div>
@@ -155,6 +163,7 @@ const ResourcesDashboardPage = () => {
               defaultValue={filterParams.sort}
               name="sort"
               id="sort"
+              className="rounded-md  h-8 px-1"
             >
               {sortOptions.map((opt, index) => (
                 <option key={index} value={opt.value}>
@@ -166,7 +175,7 @@ const ResourcesDashboardPage = () => {
         </div>
         <div className="border-4 bg-gray-100 border-slate-900 m-2">
           <div
-            className="p-2 border border-gray-100 grid grid-cols-4 gap-8 bg-slate-100 text-md font-semibold uppercase  text-center text-slate-800"
+            className="p-2 border border-gray-100 grid grid-cols-4 gap-8 bg-slate-100 text-md font-semibold uppercase text-center text-slate-800"
             style={{ gridTemplateColumns: "1fr 1fr 1fr 45px" }}
           >
             <p>Team Member</p>

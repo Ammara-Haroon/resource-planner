@@ -65,12 +65,14 @@ const JobForm = ({ onSubmit }: { onSubmit: (newJob: JobData) => any }) => {
       onSubmit={handleSubmit}
     >
       <div
-        className="p-2 border items-center border-gray-100 grid grid-cols-4 gap-4 hover:bg-slate-500"
+        className="p-2 items-center grid grid-cols-4 gap-4 hover:bg-slate-500"
         style={{ gridTemplateColumns: "1fr 1fr 1fr 45px" }}
       >
         <input
           className="text-slate-900 px-2 w-11/12 bg-slate-100 h-9 rounded-md"
           name="name"
+          type="text"
+          pattern=".*[A-Za-z].*"
           ref={jobNameRef}
           required
         ></input>

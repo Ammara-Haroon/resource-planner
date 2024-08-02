@@ -10,9 +10,10 @@ export const getAllJobs = async (): Promise<Job[]> => {
 };
 
 export const createJob = async (data: JobData): Promise<Job> => {
-  console.log(data);
-
-  const response = await axios.post(`${BACKEND_BASE_URL}/jobs`, (data = data));
+  const response = await axios.post(
+    `${BACKEND_BASE_URL}/jobs`,
+    (data = cleanJobData(data))
+  );
   return response.data;
 };
 
@@ -20,7 +21,7 @@ export const deleteJob = async (id: number): Promise<void> => {
   return await axios.delete(`${BACKEND_BASE_URL}/jobs/${id}`);
 };
 export const updateJob = async (job: Required<JobData>): Promise<Job> => {
-  console.log(`${BACKEND_BASE_URL}/jobs/${job.id}`, job);
+  console.log(`${BACKEND_BASE_URL}/jobs/${job.id}`, cleanJobData(job));
   const response = await axios.put(`${BACKEND_BASE_URL}/jobs/${job.id}`, job);
   return response.data;
 };
@@ -54,4 +55,8 @@ export const cleanJobs = (data: any): Job[] => {
     startDate: new Date(entry.startDate),
     endDate: new Date(entry.endDate),
   }));
+};
+
+const cleanJobData = (data: JobData): JobData => {
+  return { ...data, name: data.name.trim() };
 };

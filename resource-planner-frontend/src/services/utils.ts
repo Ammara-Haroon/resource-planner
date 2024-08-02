@@ -1,5 +1,3 @@
-import { Job } from "./api-responses_interfaces";
-
 export interface ITimeBound {
   startDate: Date;
   endDate: Date;
@@ -68,23 +66,20 @@ export const getDatesInMonthCalendar = (year: number, month: number) => {
   return dates;
 };
 
-export const getBusyStatus = (dates: Date[], jobs: ITimeBound[]) => {
+//returns a matrix of length date filled with index of jobs on that date
+export const getBusyStatus = (dates: Date[], jobs: ITimeBound[]): number[] => {
   const status = new Array(dates.length).fill(-1);
-  if (!jobs) return status;
+  if (!jobs || jobs.length === 0) return status;
 
   for (let i = 0; i < jobs.length; ++i) {
     jobs[i].startDate.setHours(0, 0, 0, 0);
     jobs[i].endDate.setHours(0, 0, 0, 0);
-
-    console.log(jobs[i].startDate, jobs[i].endDate);
-    console.log(dates);
 
     let index = dates.findIndex((date: Date) => {
       return date.getTime() === jobs[i].startDate.getTime();
     });
 
     if (index === -1) continue;
-    console.log(index, dates[index].getTime(), jobs[i].endDate.getTime());
 
     while (dates[index].getTime() <= jobs[i].endDate.getTime()) {
       status[index] = i;

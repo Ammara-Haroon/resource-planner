@@ -13,7 +13,6 @@ interface IJobsCardProps {
   onEdit: (job: Required<JobData>) => any;
 }
 const JobsCard = ({ job, onDelete, onEdit }: IJobsCardProps) => {
-  //console.log(job);
   const [showModal, setShowModal] = useState(false);
   const [showOptionsMenu, setShowOptionsMenu] = useState(false);
 

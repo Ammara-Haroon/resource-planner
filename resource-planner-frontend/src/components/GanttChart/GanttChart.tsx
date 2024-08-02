@@ -9,8 +9,11 @@ import {
 
 const GanttChart = ({ jobs }: { jobs: Job[] | undefined }) => {
   const minDate = jobs ? getMinDate(jobs) : new Date();
-  const maxDate = jobs ? getMaxDate(jobs) : new Date(minDate + 30);
-  const dates = getAllDatesBetween(minDate, maxDate);
+  const maxDate = jobs ? getMaxDate(jobs) : new Date(new Date().getDate() + 30);
+  const dates = getAllDatesBetween(
+    minDate || new Date(),
+    maxDate || new Date(new Date().getDate() + 30)
+  );
 
   const sortedJobs = jobs?.sort(
     (job1, job2) => job1.startDate.getTime() - job2.startDate.getTime()
@@ -39,8 +42,6 @@ const GanttChart = ({ jobs }: { jobs: Job[] | undefined }) => {
             <span
               className=" bg-neutral-200 font-semibold  min-w-56 text-center w-56 text-nowrap text-ellipsis overflow-hidden px-1 text-sm"
               style={{
-                //backgroundColor: colors[index % colors.length],
-                //opacity: "0.8",
                 borderWidth: "6px",
                 boxSizing: "border-box",
                 borderColor: colors[index % colors.length],

@@ -31,6 +31,12 @@ const JobModal = ({ job, onClose, onSubmit }: IModalProps) => {
     endDate: job.endDate,
   });
   const [resources, setResources] = useState<Resource[]>([]);
+  const btnStyleClass =
+    "border border-black px-4 py-1 w-15 bg-slate-800 text-neutral-200  hover:text-pink-600";
+  const inputStyleClass = "text-lg font-semibold text-center";
+  const labelStyleClass = "text-right p-1";
+
+  document.body.style.overflow = "hidden";
 
   useEffect(() => {
     if (dateRange && dateRange.startDate && dateRange.endDate) {
@@ -84,12 +90,6 @@ const JobModal = ({ job, onClose, onSubmit }: IModalProps) => {
     });
   }
 
-  document.body.style.overflow = "hidden";
-
-  const btnStyleClass =
-    "border border-black px-4 py-1 w-15 bg-slate-800 text-neutral-200  hover:text-pink-600";
-  const inputStyleClass = "text-lg font-semibold text-center";
-  const labelStyleClass = "text-right p-1";
   const handleClose = (): void => {
     document.body.style.overflow = "visible";
     onClose();
@@ -143,22 +143,6 @@ const JobModal = ({ job, onClose, onSubmit }: IModalProps) => {
                 setSelectedResource(event.target.value);
               }}
             />
-            {/* <select
-              className={inputStyleClass}
-              onChange={handleChange}
-              name="resource"
-              id="resource"
-              value={resourceId}
-            >
-              <option key={-1} value={-1}>
-                Not Assigned
-              </option>
-              {options.map((op: Resource) => (
-                <option key={op.id} value={op.id}>
-                  {op.firstName} {op.lastName}
-                </option>
-              ))}
-            </select> */}
           </div>
 
           <div className="flex justify-center items-center gap-2">

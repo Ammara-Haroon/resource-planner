@@ -19,7 +19,6 @@ const ToggelButton = ({
   defaultValue = 0,
 }: IToggleButtonProps) => {
   const [currentValue, setCurrentValue] = useState(defaultValue);
-  console.log(currentValue);
   const switchStyle =
     "text-neutral-100 w-20 border-2 shadow-sm border-pink-500 rounded-full flex relative m-2 items-center  cursor-pointer";
   let switchButtonStyle =
@@ -38,7 +37,6 @@ const ToggelButton = ({
     setCurrentValue((currentValue + 1) % 2);
     onSwitch();
   };
-  console.log(switchButtonStyle);
   return (
     <div onClick={handleClick} className={switchStyle}>
       <button className={switchButtonStyle}>
