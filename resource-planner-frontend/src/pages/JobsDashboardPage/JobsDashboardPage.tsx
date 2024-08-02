@@ -277,8 +277,8 @@ const JobsDashboardPage = () => {
       </div>
       {defaultView ? (
         <div>
-          <div className="flex h-28 justify-around items-center">
-            <div className="flex flex-col">
+          <div className="flex items-end md:flex-row flex-col h-fit md:h-28 md:justify-around md:items-center">
+            <div className="flex p-2 md:flex-col">
               <label className={labelStyleClass} htmlFor="team">
                 <FontAwesomeIcon icon={faFilter} /> Team Members:{" "}
               </label>
@@ -295,17 +295,18 @@ const JobsDashboardPage = () => {
                 opensUp={false}
               />
             </div>
-            <div className="flex flex-col min-w-60">
+            <div className="flex px-2 items-center md:flex-col flex-row min-w-60">
               <label className={labelStyleClass}>
                 <FontAwesomeIcon icon={faCalendarPlus} /> Date Range :
               </label>
 
               <Datepicker
+                containerClassName="md:w-60 w-30"
                 onChange={handleFilterChange}
                 value={filterParams.dateFilter}
               />
             </div>
-            <div className="flex flex-col">
+            <div className="flex  px-2 items-center md:flex-col flex-row">
               <label className={labelStyleClass} htmlFor="sort">
                 <FontAwesomeIcon className="rotate-90" icon={faRightLeft} />{" "}
                 Sort By:

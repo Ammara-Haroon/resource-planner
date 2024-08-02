@@ -30,4 +30,8 @@ public class ServiceValidationException extends Exception {
     return this.errors.contains(className);
   }
 
+  public void addError(String field,String message){
+    errors.addError(field,message);
+  }
+
 }

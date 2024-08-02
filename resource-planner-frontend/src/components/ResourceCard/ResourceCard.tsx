@@ -66,10 +66,10 @@ const ResourceCard = ({ resource, onDelete, onEdit }: IResourceCardProps) => {
         />
       )}
       <div
-        className="p-2 border border-gray-100 grid grid-cols-4 gap-8 bg-neutral-200 hover:bg-slate-300 text-slate-800 text-sm font-semibold"
-        style={{ gridTemplateColumns: "1fr 1fr 1fr 45px" }}
+        className="p-2 border border-gray-100 flex md:grid md:grid-cols-4 gap-8 bg-neutral-200 hover:bg-slate-300 text-slate-800 text-sm font-semibold"
+        style={{ gridTemplateColumns: "1fr 80px 1fr 45px" }}
       >
-        <div className="flex gap-1 items-center">
+        <div className="text-nowrap text-ellipsis overflow-hidden flex gap-1 items-center w-full">
           <img
             className="h-10 w-10 border rounded-full"
             src={resource.imageUrl || Profile_Pic}
@@ -77,10 +77,10 @@ const ResourceCard = ({ resource, onDelete, onEdit }: IResourceCardProps) => {
           />
           <p>{`${resource.firstName} ${resource.lastName}`}</p>
         </div>
-        <div className="flex items-center justify-center">
+        <div className=" md:visible hidden md:flex items-center justify-center">
           <p className="text-center">{resource.jobs?.length || 0}</p>
         </div>
-        <div className="flex justify-center items-center">
+        <div className="md:flex justify-center items-center md:visible hidden">
           <WeekView jobs={resource.jobs} />
         </div>
         <div className="flex  hover:cursor-pointer justify-center items-center w-fit relative">

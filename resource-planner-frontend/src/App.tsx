@@ -7,17 +7,16 @@ import ResourcesDashboardPage from "./pages/ResourcesDashboardPage/ResourcesDash
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
 import ResourcePage from "./pages/ReosurcePage/ResourcePage";
 import SideMenu from "./components/SideMenu/SideMenu";
-import GanttChartPage from "./components/GanttChart/GanttChart";
 
 function App() {
   return (
     <BrowserRouter>
       <div
-        className="grid  font-mono min-h-screen max-w-screen "
+        className="md:grid flex flex-col font-mono min-h-screen max-w-screen "
         style={{ gridTemplateColumns: "1fr 6fr" }}
       >
         <SideMenu />
-        <div className="max-w-full overflow-hidden w-full h-full bg-gradient-to-b from-slate-900 to-sky-700 my-1">
+        <div className="max-w-full overflow-hidden w-full h-full bg-gradient-to-b from-slate-900 to-sky-700 md:my-1">
           <Routes>
             <Route path="/" element={<JobsDashboardPage />} />
             <Route path="/resources" element={<ResourcesDashboardPage />} />

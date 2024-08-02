@@ -98,7 +98,7 @@ const JobModal = ({ job, onClose, onSubmit }: IModalProps) => {
     <div className="flex justify-center items-center fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity z-20">
       <form
         onSubmit={handleSubmit}
-        className="flex justify-center items-center"
+        className="flex justify-center items-center md:p-0 p-2"
       >
         <div className="bg-slate-200 p-5 flex flex-col gap-10 justify-center items-center  border border-black border-dotted">
           <FontAwesomeIcon

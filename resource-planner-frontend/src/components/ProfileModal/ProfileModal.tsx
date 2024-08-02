@@ -19,7 +19,6 @@ const ProfileModal = ({ resource, onClose, onSubmit }: IProfileModalProps) => {
   document.body.style.overflow = "hidden";
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [showPhotoModal, setShowPhotoModal] = useState(false);
-  //const formRef = useRef<HTMLFormElement>(null);
   const [imageUrl, setImageUrl] = useState<string>(
     resource.imageUrl || ProfilePic
   );
@@ -76,7 +75,7 @@ const ProfileModal = ({ resource, onClose, onSubmit }: IProfileModalProps) => {
     />
   ) : (
     <div className="z-50 flex justify-center items-center fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity">
-      <div className="bg-slate-200 p-5 flex flex-col gap-5 justify-center items-center  border border-black border-dotted">
+      <div className="bg-slate-200 p-5 md:m-0 m-2 flex flex-col gap-5 justify-center items-center  border border-black border-dotted">
         <FontAwesomeIcon
           onClick={handleClose}
           className="self-end  hover:text-pink-600 hover:cursor-pointer "

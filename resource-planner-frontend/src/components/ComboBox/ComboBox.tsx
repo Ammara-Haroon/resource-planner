@@ -29,7 +29,7 @@ const ComboBox = ({
   const [showOptions, setShowOptions] = useState(false);
   const imgStyleClass = "h-7 w-7 rounded-full p-1";
   const iconStyleClass = "h-5 w-5 rounded-full p-1";
-  const optionsBoxStyle = `grid grid-col-2 shadow-2xl absolute rounded-md bg-neutral-200 z-50 w-full border border-slate-500 max-h-[calc(50lvh)] overflow-y-scroll ${
+  const optionsBoxStyle = `grid grid-col-2 shadow-2xl absolute rounded-md bg-neutral-200 z-50 w-full border border-slate-500 min-w-fit max-h-[calc(50lvh)] overflow-y-scroll ${
     opensUp ? "bottom-11" : "top-11"
   }`;
   const [selectedValue, setSelectedValue] = useState(defaultValue);

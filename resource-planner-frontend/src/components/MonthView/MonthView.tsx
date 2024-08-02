@@ -29,6 +29,7 @@ const MonthView = ({
         ))}
         {dates.map((date, index) => (
           <span
+            key={index}
             className={`${
               date && date.getMonth() === month
                 ? "text-slate-800"

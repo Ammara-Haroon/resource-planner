@@ -139,7 +139,7 @@ const ResourcesDashboardPage = () => {
     <div className="w-full">
       <PageTitle title={"Team Dashboard"} />
       <div>
-        <div className="flex h-28 justify-around items-center">
+        <div className="flex md:flex-row flex-col h-28 justify-around items-center">
           <div>
             <label className={labelStyleClass} htmlFor="search">
               <FontAwesomeIcon icon={faFilter} />
@@ -175,12 +175,16 @@ const ResourcesDashboardPage = () => {
         </div>
         <div className="border-4 bg-gray-100 border-slate-900 m-2">
           <div
-            className="p-2 border border-gray-100 grid grid-cols-4 gap-8 bg-slate-100 text-md font-semibold uppercase text-center text-slate-800"
-            style={{ gridTemplateColumns: "1fr 1fr 1fr 45px" }}
+            className="p-2 border border-gray-100 md:grid md:grid-cols-4 md:gap-8 bg-slate-100 text-md font-semibold uppercase md:text-center text-slate-800"
+            style={{ gridTemplateColumns: "1fr 80px 1fr 45px" }}
           >
             <p>Team Member</p>
-            <p>Assigned Jobs</p>
-            <p>Availability</p>
+            <p className="hidden md:visible md:flex md:justify-center">
+              #Assigned
+            </p>
+            <p className="hidden md:visible md:flex md:justify-center">
+              Availability
+            </p>
           </div>
           {resourcesQuery.data &&
             filteredData.map((resource) => (

@@ -27,7 +27,10 @@ const GanttChart = ({ jobs }: { jobs: Job[] | undefined }) => {
         </span>
 
         {dates.map((date: Date) => (
-          <span className="border font-semibold border-black min-w-8 w-8 text-center p-1 bg-slate-300">
+          <span
+            key={date.getTime()}
+            className="border font-semibold border-black min-w-8 w-8 text-center p-1 bg-slate-300"
+          >
             <small>
               {date.toLocaleDateString("default", { month: "short" })}
             </small>

@@ -55,11 +55,7 @@ public class ResourceService {
     return this.repo.findAll();
   }
 
-  public Resource createResource(@Valid CreateResourceDTO data) {
-    Resource newResource = mapper.map(data,Resource.class);
-    return this.repo.save(newResource);
-  }
-
+  
   public List<Resource> findAvailableResourcesBetweenDates(String startDate, String endDate) {
 
     DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -76,19 +72,8 @@ public class ResourceService {
     return this.repo.findById(resId);
   }
 
-  public Optional<Resource> updateResource(Long id, UpdateResourceDTO data) {
-    Optional<Resource> mayBeResource = this.repo.findById(id);
-    if(mayBeResource.isEmpty()) {
-      return Optional.empty();
-    }
-    Resource foundResource = mayBeResource.get();
-    mapper.map(data,foundResource);
-    
-    Resource updatedResource = this.repo.save(foundResource);
-    return Optional.of(updatedResource);
-  }
-
-  public boolean deleteResource(Long id) {
+  
+  public boolean deleteResource(Long id) throws ServiceValidationException {
     Optional<Resource> mayBeResource = this.repo.findById(id);
     if(mayBeResource.isEmpty()) return false;
     Resource resource = mayBeResource.get(); 
@@ -98,12 +83,14 @@ public class ResourceService {
       Job job = jobs.get(i);
       job.setResource(null);           
     };
+      
     deleteImage(resource.getId().toString());
+    
     this.repo.deleteById(id);
     return true;
   }
 
-  private void deleteImage(String objName) {
+  private void deleteImage(String objName) throws ServiceValidationException {
     try {
       Credentials credentials = GoogleCredentials
              .fromStream(new FileInputStream(GCP_CREDENTIALS));
@@ -112,12 +99,14 @@ public class ResourceService {
       BlobId blobId = BlobId.of(BUCKET_NAME, objName);
       storage.delete(blobId);
     } catch (Exception e) {
-          e.printStackTrace();
-        }
+      ValidationErrors ve = new ValidationErrors();
+      ve.addError("CDN", "Error occured while updating Profil Pic");
+      throw new ServiceValidationException(ve);
+    }
 
   }
 
-  public Resource createResource(String firstName, String lastName, MultipartFile imageFile) {
+  public Resource createResource(String firstName, String lastName, MultipartFile imageFile) throws ServiceValidationException {
     Resource newResource = new Resource();
     newResource.setFirstName(firstName);
     newResource.setLastName(lastName);
@@ -125,7 +114,7 @@ public class ResourceService {
     System.out.println(imageFile);
     String imageURL = null;
     if(!imageFile.isEmpty()) {
-      imageURL = uploadImage(imageFile,newResource.getId().toString());
+        imageURL = uploadImage(imageFile,newResource.getId().toString());
     }
     newResource.setImageUrl(imageURL);
     newResource = this.repo.save(newResource);
@@ -134,8 +123,7 @@ public class ResourceService {
   }
 
   //uploads image to cloud and returns URL 
-  private String uploadImage(MultipartFile imageFile,String objName) {
-    System.out.println("GCP FIle:"+GCP_CREDENTIALS);
+  private String uploadImage(MultipartFile imageFile,String objName) throws ServiceValidationException {
     String url = null;
     try {
       Credentials credentials = GoogleCredentials
@@ -143,7 +131,6 @@ public class ResourceService {
       Storage storage = StorageOptions.newBuilder().setCredentials(credentials).setProjectId("resource-planner").build().getService();
    
       BlobId blobId = BlobId.of(BUCKET_NAME, objName);
-      System.out.println(blobId);
       BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("image/png").build();
       byte[] content = imageFile.getBytes();
 
@@ -164,24 +151,18 @@ public class ResourceService {
           Storage.BlobTargetOption.generationMatch(
               storage.get(BUCKET_NAME, objName).getGeneration());
     }
-    Blob newBlob = storage.create(blobInfo, content, precondition);
+    storage.create(blobInfo, content, precondition);
     url = String.format(AUTHENTICATED_URL,BUCKET_NAME,objName);
-    System.out.println(newBlob.asBlobInfo());
-    System.out.println(
-        "Object "
-            + objName
-            + " uploaded to bucket "
-            + BUCKET_NAME
-            + " with contents "
-            + imageFile);
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
+    } catch (Exception e) {
+      ValidationErrors ve = new ValidationErrors();
+      ve.addError("CDN", "Error occured while updating Profil Pic");
+      throw new ServiceValidationException(ve);
+    }
     
     return url;
   }
 
-  public Optional<Resource> updateResource(Long id, String firstName, String lastName, MultipartFile imageFile) {
+  public Optional<Resource> updateResource(Long id, String firstName, String lastName, MultipartFile imageFile) throws ServiceValidationException {
     Optional<Resource> mayBeResource = this.repo.findById(id);
     if(mayBeResource.isEmpty()) {
       return Optional.empty();
@@ -202,7 +183,5 @@ public class ResourceService {
     foundResource.setImageUrl(imageURL);
     Resource updatedResource = this.repo.save(foundResource);
     return Optional.of(updatedResource);
-  }
-
-  
+  }  
 }

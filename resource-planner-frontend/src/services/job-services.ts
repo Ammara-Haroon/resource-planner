@@ -5,7 +5,6 @@ import { Job, JobData } from "./api-responses_interfaces";
 export const getAllJobs = async (): Promise<Job[]> => {
   const response = await axios.get(`${BACKEND_BASE_URL}/jobs`);
   const data = response.data;
-  console.log(data);
   return cleanJobs(data);
 };
 
@@ -43,7 +42,6 @@ export const addJobs = () => {
       name: "Job" + i,
       resource: null,
     };
-    console.log(newJob);
     createJob(newJob);
   }
 };

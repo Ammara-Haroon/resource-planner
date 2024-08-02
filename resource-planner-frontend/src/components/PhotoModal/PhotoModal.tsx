@@ -32,8 +32,6 @@ const PhotoModal = ({ photoURL, onClose, onSave }: IPhotoModalProps) => {
 
   const btnStyleClass =
     "bg-slate-800 text-neutral-200 border border-black px-4 py-1 w-15  hover:text-pink-600";
-  const inputStyleClass = "text-lg font-semibold text-center";
-  const labelStyleClass = "text-right";
   const handleClose = (): void => {
     document.body.style.overflow = "visible";
     onClose();
@@ -41,7 +39,7 @@ const PhotoModal = ({ photoURL, onClose, onSave }: IPhotoModalProps) => {
 
   return (
     <div className="flex justify-center items-center fixed inset-0 bg-gray-500 z-10 transition-opacity">
-      <div className="bg-slate-200 p-5 flex flex-col gap-5 justify-center items-center  border-2 border-slate-900 border-dotted w-fit h-fit">
+      <div className="bg-slate-200 p-5 flex flex-col gap-5 justify-center items-center  border-2 border-slate-900 border-dotted w-fit h-fit m-2 md:m-0">
         <FontAwesomeIcon
           onClick={handleClose}
           className="self-end  hover:text-pink-600 hover:cursor-pointer "

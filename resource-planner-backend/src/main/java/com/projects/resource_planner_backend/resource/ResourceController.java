@@ -1,17 +1,15 @@
 package com.projects.resource_planner_backend.resource;
 
-import java.util.Date;
+import java.rmi.ServerException;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,15 +20,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.projects.resource_planner_backend.exceptions.NotFoundException;
 import com.projects.resource_planner_backend.exceptions.ServiceValidationException;
-import com.projects.resource_planner_backend.job.CreateJobDTO;
-import com.projects.resource_planner_backend.job.JobService;
-import com.projects.resource_planner_backend.job.UpdateJobDTO;
 
 import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
@@ -45,7 +41,6 @@ public class ResourceController {
     List<Resource> resources = this.resourceService.findAllResources();
     return new ResponseEntity<>(resources,HttpStatus.OK);
   }
-
   
   @GetMapping("/options")
   public ResponseEntity<List<Resource>> findAvailableResourcesBetweenDates(@RequestParam String startDate,@RequestParam String endDate) {
@@ -53,33 +48,39 @@ public class ResourceController {
     return new ResponseEntity<>(resources,HttpStatus.OK);
   }
 
-  class dto{
-    String txt;
-    @Override
-    public String toString() {
-      // TODO Auto-generated method stub
-      return txt;
-    }
-  }
-  @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)//consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  public ResponseEntity<Resource> createResource(@RequestPart String firstName,@RequestParam String lastName, @RequestPart MultipartFile imageFile) 
+  @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  public ResponseEntity<Resource> createResource(@Valid @NotBlank @Pattern(regexp = "[A-Z a-z]*[A-Za-z][A-Z a-z]*") @RequestPart String firstName,@Valid @NotBlank  @Pattern(regexp = "[A-Z a-z]*[A-Za-z][A-Z a-z]*") @RequestPart String lastName, @RequestPart(required=false) MultipartFile imageFile) throws ServerException 
   {
-    System.out.println(firstName);
-    System.out.println(lastName);
-    System.out.println(imageFile.getOriginalFilename());
+    if(firstName == null) throw new ValidationException("First name is missing");
+    if(lastName == null) throw new ValidationException("Last name is missing");
     
-    System.out.println(imageFile.isEmpty());
+    firstName = firstName.strip();
+    lastName = lastName.strip();
     
-    Resource newResource = this.resourceService.createResource(firstName,lastName,imageFile);
+    Resource newResource;
+    try {
+      newResource = this.resourceService.createResource(firstName,lastName,imageFile);
+    } catch (ServiceValidationException e) {
+      throw new ServerException(e.generateMessage());
+    }
     return new ResponseEntity<>(newResource,HttpStatus.CREATED);
-    //  return new ResponseEntity<>(null,HttpStatus.OK);
   }
   
-  @PatchMapping(path = "/{id}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)//consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  public ResponseEntity<Resource> createResource(@PathVariable Long id, @RequestPart String firstName,@RequestParam String lastName, @RequestPart(required = false) MultipartFile imageFile) throws NotFoundException
+  @PatchMapping(path = "/{id}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  public ResponseEntity<Resource> createResource(@PathVariable Long id, @Valid @NotBlank @Pattern(regexp = "[A-Z a-z]*[A-Za-z][A-Z a-z]*") @RequestPart String firstName,@Valid @NotBlank @Pattern(regexp = "[A-Z a-z]*[A-Za-z][A-Z a-z]*") @RequestPart String lastName, @RequestPart(required = false) MultipartFile imageFile) throws NotFoundException, ServerException
   {
-      System.out.println(imageFile);
-      Optional<Resource> mayBeResource = this.resourceService.updateResource(id,firstName,lastName,imageFile);
+    if(firstName == null) throw new ValidationException("First name is missing");
+    if(lastName == null) throw new ValidationException("Last name is missing");
+    
+    firstName = firstName.strip();
+    lastName = lastName.strip();
+    
+      Optional<Resource> mayBeResource;
+      try {
+        mayBeResource = this.resourceService.updateResource(id,firstName,lastName,imageFile);
+      } catch (ServiceValidationException e) {
+        throw new ServerException(e.generateMessage());
+      }
       if(mayBeResource.isEmpty()){
         throw new NotFoundException(Resource.class, id);
       }
@@ -87,8 +88,13 @@ public class ResourceController {
       return new ResponseEntity<>(updatedResource,HttpStatus.OK);
   }
   @DeleteMapping("/{id}")
-  public ResponseEntity<Void> deleteJob(@PathVariable Long id) throws NotFoundException{
-    boolean done = this.resourceService.deleteResource(id);
+  public ResponseEntity<Void> deleteJob(@PathVariable Long id) throws NotFoundException, ServerException{
+    boolean done;
+    try {
+      done = this.resourceService.deleteResource(id);
+    } catch (ServiceValidationException e) {
+      throw new ServerException(e.generateMessage());
+    }
     if(!done) throw new NotFoundException(Resource.class,id);
     
     return new ResponseEntity<>(HttpStatus.OK);

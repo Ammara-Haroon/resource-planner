@@ -81,7 +81,7 @@ const ResourcePage = () => {
       </div>
       <div className="border-2 shadow-lg  border-pink-500 min-h-[calc(100vh-300px)] m-2 p-2 rounded-lg">
         <div
-          className="grid-cols-2 grid box-border rounded-md border-pink-500"
+          className="md:grid-cols-2 md:grid box-border rounded-md border-pink-500"
           style={{ gridTemplateColumns: "1fr 1fr" }}
         >
           <div className="grid grid-cols-2  m-1 py-1 pb-4 border-4  border-dashed  box-border border-pink-500 shadow-lg bg-neutral-100">
@@ -95,6 +95,7 @@ const ResourcePage = () => {
               filteredJobs.map((job, index) => (
                 <>
                   <span
+                    key={index}
                     className="w-fit text-wrap px-2 py-1 border-b border-gray-200"
                     style={{ color: colors[index % colors.length] }}
                   >
@@ -103,6 +104,7 @@ const ResourcePage = () => {
                     {job.endDate?.toLocaleDateString()}
                   </span>
                   <p
+                    key={index}
                     className="w-full text-left p-1 text-pretty"
                     style={{ color: colors[index % colors.length] }}
                   >

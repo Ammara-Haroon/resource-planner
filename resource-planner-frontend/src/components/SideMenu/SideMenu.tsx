@@ -8,19 +8,19 @@ import { faUserGroup } from "@fortawesome/free-solid-svg-icons/faUserGroup";
 
 const SideMenu = () => {
   const linkStyle =
-    "p-2 hover:bg-slate-700 font-mono text-pink-500 uppercase flex items-center";
-  const activeLinkStyle = `${linkStyle} border border-slate-700`;
+    "p-2 md:hover:bg-slate-700 font-mono text-pink-500 uppercase flex items-center";
+  const activeLinkStyle = `${linkStyle} text-pink-700`;
 
   return (
-    <div className="border border-black flex flex-col justify-start m-1 text-sky-500 bg-gradient-to-b from-slate-900 to-sky-700 min-h-screen w-56">
+    <div className="border border-black bg-slate-900 flex md:flex-col flex-row justify-start md:m-1 text-sky-500 md:bg-gradient-to-b md:from-slate-900 md:to-sky-700 md:min-h-screen h-fit md:w-56 w-screen">
       <NavLink
         to="/"
-        className="p-2 hover:bg-slate-700 font-mono text-xl  font-semibold flex items-center text-pink-500 uppercase"
+        className="p-2 md:hover:bg-slate-700 font-mono text-xl  font-semibold  items-center text-pink-500 uppercase"
       >
         <FontAwesomeIcon className="p-1 " icon={faHome} />
         <span>Home</span>
       </NavLink>
-      <div className="h-[calc(50vh)] flex flex-col justify-center">
+      <div className="md:h-[calc(50vh)] flex md:flex-col flex-row justify-center">
         <NavLink
           to="/"
           className={({ isActive, isPending }) =>

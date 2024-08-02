@@ -61,7 +61,7 @@ const JobForm = ({ onSubmit }: { onSubmit: (newJob: JobData) => any }) => {
 
   return (
     <form
-      className="bg-slate-400 fixed bottom-0 border-4 border-slate-700 z-5 box-border w-[calc(100%-256px)]"
+      className="bg-slate-400 fixed bottom-0 border-4 border-slate-700 z-5 box-border  w-[calc(100%-20px)] md:w-[calc(100%-256px)]"
       onSubmit={handleSubmit}
     >
       <div
@@ -74,6 +74,7 @@ const JobForm = ({ onSubmit }: { onSubmit: (newJob: JobData) => any }) => {
           type="text"
           pattern=".*[A-Za-z].*"
           ref={jobNameRef}
+          placeholder="Job Description"
           required
         ></input>
         <div className="flex w-full justify-center">
