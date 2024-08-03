@@ -103,6 +103,8 @@ A number of components have been built from scratch to support the app functiona
 - A color coded gantt chart shows the timeline for all jobs on a calendar. A tooltip gives further description for each row in gantt chart.
 - Options menu are available for both jobs and team members to edit and delete them.
 - Team Member details can be viewed using the more button in options menu that opens up a list and calendar with jobs marked on it.
+- Profile pictures can be uploaded from computer to the server.
+- Google cloud storage is used to keep the profile pics of all team members and url is stored in the database to access these images.
 
 ## Known issues
 
