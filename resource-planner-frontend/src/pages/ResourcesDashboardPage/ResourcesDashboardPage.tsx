@@ -55,6 +55,7 @@ const ResourcesDashboardPage = () => {
   });
   const labelStyleClass = "text-neutral-200 p-2 uppercase text-sm ";
   const queryClient = useQueryClient();
+
   const resourcesQuery = useQuery({
     queryKey: ["resources"],
     queryFn: getAllResources,

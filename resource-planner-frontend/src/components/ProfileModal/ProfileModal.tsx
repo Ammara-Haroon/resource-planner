@@ -1,4 +1,4 @@
-import { FormEvent, useRef, useState } from "react";
+import { ChangeEvent, FormEvent, useRef, useState } from "react";
 import {
   Resource,
   ResourceData,
@@ -19,11 +19,14 @@ const ProfileModal = ({ resource, onClose, onSubmit }: IProfileModalProps) => {
   document.body.style.overflow = "hidden";
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [showPhotoModal, setShowPhotoModal] = useState(false);
+  const [firstName, setFirstName] = useState(resource.firstName);
+  const [lastName, setLastName] = useState(resource.lastName);
   const [imageUrl, setImageUrl] = useState<string>(
     resource.imageUrl || ProfilePic
   );
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
+    //event.preventDefault();
     let formData = new FormData(event.currentTarget);
     if (
       (resource.imageUrl || imageUrl !== ProfilePic) &&
@@ -34,10 +37,11 @@ const ProfileModal = ({ resource, onClose, onSubmit }: IProfileModalProps) => {
     const editedProfile: Required<ResourceData> = {
       firstName: "",
       lastName: "",
-      ...Object.fromEntries(formData.entries()),
-      id: resource.id,
       imageFile: null,
+      id: resource.id,
+      ...Object.fromEntries(formData.entries()),
     };
+    console.log(editedProfile);
     onSubmit(editedProfile);
   };
 
@@ -109,6 +113,11 @@ const ProfileModal = ({ resource, onClose, onSubmit }: IProfileModalProps) => {
               defaultValue={resource.firstName}
               name="firstName"
               id="firstName"
+              pattern="[a-z A-Z]*[a-zA-Z][a-z A-Z]*"
+              value={firstName}
+              onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                setFirstName(event.currentTarget.value)
+              }
               required
             ></input>
 
@@ -120,6 +129,11 @@ const ProfileModal = ({ resource, onClose, onSubmit }: IProfileModalProps) => {
               defaultValue={resource.lastName}
               name="lastName"
               id="lastName"
+              value={lastName}
+              onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                setLastName(event.currentTarget.value)
+              }
+              pattern="[a-z A-Z]*[a-zA-Z][a-z A-Z]*"
               required
             ></input>
             <p></p>

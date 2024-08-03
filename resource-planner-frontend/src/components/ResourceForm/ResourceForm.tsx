@@ -41,7 +41,7 @@ const ResourceForm = ({
       onSubmit={handleSubmit}
     >
       <div
-        className="p-2 border border-red-700 grid  hover:bg-slate-500 items-center"
+        className="p-2 grid  hover:bg-slate-500 items-center"
         style={{ gridTemplateColumns: "1fr 1fr 1fr 45px" }}
       >
         <input

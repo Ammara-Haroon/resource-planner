@@ -3,16 +3,16 @@ package com.projects.resource_planner_backend.job;
 import java.util.Date;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 public class CreateJobDTO {
 
   @NotBlank
-  @Pattern(regexp = ".*[a-zA-Z].*")
   private String name;
-  @NotBlank
+  @NotNull
   private Date startDate;
-  @NotBlank
+  @NotNull
   private Date endDate;
   
   private Long resource;

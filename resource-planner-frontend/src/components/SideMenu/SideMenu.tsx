@@ -12,7 +12,7 @@ const SideMenu = () => {
   const activeLinkStyle = `${linkStyle} text-pink-700`;
 
   return (
-    <div className="border border-black bg-slate-900 flex md:flex-col flex-row justify-start md:m-1 text-sky-500 md:bg-gradient-to-b md:from-slate-900 md:to-sky-700 md:min-h-screen h-fit md:w-56 w-screen">
+    <div className="border border-black bg-slate-900 flex md:flex-col flex-row justify-start md:m-1 text-sky-500 md:bg-gradient-to-b md:from-slate-900 md:to-sky-700 md:h-full h-fit md:w-56 w-screen">
       <NavLink
         to="/"
         className="p-2 md:hover:bg-slate-700 font-mono text-xl  font-semibold  items-center text-pink-500 uppercase"

@@ -63,14 +63,14 @@ const JobModal = ({ job, onClose, onSubmit }: IModalProps) => {
   const handleSubmit = (event: any): void => {
     //event.preventDefault();
     if (!dateRange || !dateRange.startDate || !dateRange.endDate) return;
-    const newJob: Required<JobData> = {
+    const updatedJob: Required<JobData> = {
       id: job.id,
       name: jobNameRef.current?.value || "",
       startDate: new Date(dateRange.startDate),
       endDate: new Date(dateRange.endDate),
       resource: selectedResource == -1 ? null : selectedResource,
     };
-    onSubmit(newJob);
+    onSubmit(updatedJob);
   };
 
   const options = new Array<IComboBoxOption>();
